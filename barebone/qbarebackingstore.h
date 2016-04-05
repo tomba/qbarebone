@@ -6,10 +6,12 @@
 
 QT_BEGIN_NAMESPACE
 
+class QBareIntegration;
+
 class QBareBackingStore : public QPlatformBackingStore
 {
 public:
-	QBareBackingStore(QWindow *window);
+	QBareBackingStore(QWindow *window, QBareIntegration* integration);
 	~QBareBackingStore();
 
 	QPaintDevice *paintDevice();
@@ -17,8 +19,8 @@ public:
 	void resize(const QSize &size, const QRegion &staticContents);
 
 private:
+	QBareIntegration* m_integration;
 	QImage mImage;
-	const bool mDebug;
 };
 
 QT_END_NAMESPACE

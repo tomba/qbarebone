@@ -2,6 +2,7 @@
 #include "qbarebackingstore.h"
 #include "qbarescreen.h"
 #include "qbarewindow.h"
+#include "qbareclientinterface.h"
 
 #include <QtGui/private/qpixmap_raster_p.h>
 #include <QtGui/private/qguiapplication_p.h>
@@ -14,42 +15,24 @@
 
 QT_BEGIN_NAMESPACE
 
-static const char debugBackingStoreEnvironmentVariable[] = "QT_DEBUG_BACKINGSTORE";
-
-static inline unsigned parseOptions(const QStringList &paramList)
-{
-	unsigned options = 0;
-	foreach (const QString &param, paramList) {
-		if (param == QLatin1String("enable_fonts"))
-			options |= QBareIntegration::EnableFonts;
-	}
-	return options;
-}
-
 QBareIntegration::QBareIntegration(const QStringList &parameters)
-	: m_dummyFontDatabase(0)
-	, m_options(parseOptions(parameters))
 {
+	Q_UNUSED(parameters);
+
 	printf("QBareIntegration()\n");
 
 	m_nativeInterface = new QBareNativeInterface(this);
-
-	if (qEnvironmentVariableIsSet(debugBackingStoreEnvironmentVariable)
-			&& qgetenv(debugBackingStoreEnvironmentVariable).toInt() > 0) {
-		m_options |= DebugBackingStore | EnableFonts;
-	}
-
 }
 
 QBareIntegration::~QBareIntegration()
 {
-	delete m_dummyFontDatabase;
 }
 
 
 void QBareIntegration::test()
 {
 	printf("TESTI\n");
+	m_clientInterface->test();
 }
 
 void QBareIntegration::add_screen(QSize size)
@@ -58,6 +41,10 @@ void QBareIntegration::add_screen(QSize size)
 	screenAdded(screen);
 }
 
+void QBareIntegration::install_client(QBareClientInterface* client)
+{
+	m_clientInterface = client;
+}
 
 
 bool QBareIntegration::hasCapability(QPlatformIntegration::Capability cap) const
@@ -70,22 +57,9 @@ bool QBareIntegration::hasCapability(QPlatformIntegration::Capability cap) const
 	}
 }
 
-// Dummy font database that does not scan the fonts directory to be
-// used for command line tools like qmlplugindump that do not create windows
-// unless DebugBackingStore is activated.
-class DummyFontDatabase : public QPlatformFontDatabase
-{
-public:
-	virtual void populateFontDatabase() {}
-};
-
 QPlatformFontDatabase *QBareIntegration::fontDatabase() const
 {
-	if (m_options & EnableFonts)
-		return QPlatformIntegration::fontDatabase();
-	if (!m_dummyFontDatabase)
-		m_dummyFontDatabase = new DummyFontDatabase;
-	return m_dummyFontDatabase;
+	return QPlatformIntegration::fontDatabase();
 }
 
 QPlatformWindow *QBareIntegration::createPlatformWindow(QWindow *window) const
@@ -97,7 +71,7 @@ QPlatformWindow *QBareIntegration::createPlatformWindow(QWindow *window) const
 
 QPlatformBackingStore *QBareIntegration::createPlatformBackingStore(QWindow *window) const
 {
-	return new QBareBackingStore(window);
+	return new QBareBackingStore(window, (QBareIntegration*)this);
 }
 
 QAbstractEventDispatcher *QBareIntegration::createEventDispatcher() const

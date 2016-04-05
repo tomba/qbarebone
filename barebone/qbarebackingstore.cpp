@@ -4,18 +4,16 @@
 #include <QtCore/qdebug.h>
 #include <qpa/qplatformscreen.h>
 #include <private/qguiapplication_p.h>
+#include "qbareclientinterface.h"
 
 #include <cstdio>
 
 QT_BEGIN_NAMESPACE
 
-QBareBackingStore::QBareBackingStore(QWindow *window)
-	: QPlatformBackingStore(window)
-	, mDebug(QBareIntegration::instance()->options() & QBareIntegration::DebugBackingStore)
+QBareBackingStore::QBareBackingStore(QWindow *window, QBareIntegration* integration)
+	: QPlatformBackingStore(window),
+	  m_integration(integration)
 {
-	if (mDebug)
-		qDebug() << "QMinimalBackingStore::QMinimalBackingStore:" << (quintptr)this;
-
 	printf("QBareBackingStore(wnd: %p)\n", window);
 }
 
@@ -38,7 +36,7 @@ void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoi
 
 	printf("QBareBackingStore::flush\n");
 
-	if (true) {
+	if (false) {
 		static int c = 0;
 		QString filename = QString("output%1.png").arg(c++, 4, 10, QLatin1Char('0'));
 		qDebug() << "QMinimalBackingStore::flush() saving contents to" << filename.toLocal8Bit().constData();
@@ -51,8 +49,10 @@ void QBareBackingStore::resize(const QSize &size, const QRegion &)
 	printf("QBareBackingStore::resize(%dx%d)\n", size.width(), size.height());
 
 	QImage::Format format = QGuiApplication::primaryScreen()->handle()->format();
-	if (mImage.size() != size)
-		mImage = QImage(size, format);
+	//if (mImage.size() != size)
+	//	mImage = QImage(size, format);
+
+	mImage = m_integration->client()->get_qimage(size);
 }
 
 QT_END_NAMESPACE

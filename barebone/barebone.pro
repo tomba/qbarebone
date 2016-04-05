@@ -11,6 +11,7 @@ SOURCES += main.cpp qbareintegration.cpp qbarebackingstore.cpp qbarescreen.cpp \
 HEADERS += qbareintegration.h qbarebackingstore.h qbarescreen.h \
     qbarewindow.h \
     qbarenativeinterface.h \
-    qbareinterface.h
+    qbareinterface.h \
+    qbareclientinterface.h
 
 OTHER_FILES += barebone.json

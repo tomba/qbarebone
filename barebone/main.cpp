@@ -16,8 +16,6 @@ public:
 
 QPlatformIntegration *QMinimalIntegrationPlugin::create(const QString& system, const QStringList& paramList)
 {
-	printf("CREATE %s\n", system.toLatin1().data());
-
 	if (!system.compare(QLatin1String("barebone"), Qt::CaseInsensitive))
 		return new QBareIntegration(paramList);
 

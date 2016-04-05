@@ -9,11 +9,6 @@ QT_BEGIN_NAMESPACE
 class QBareIntegration : public QPlatformIntegration, public QBareInterface
 {
 public:
-	enum Options { // Options to be passed on command line or determined from environment
-		DebugBackingStore = 0x1,
-		EnableFonts = 0x2
-	};
-
 	explicit QBareIntegration(const QStringList &parameters);
 	~QBareIntegration();
 
@@ -24,8 +19,6 @@ public:
 	QPlatformBackingStore *createPlatformBackingStore(QWindow *window) const;
 	QAbstractEventDispatcher *createEventDispatcher() const;
 
-	unsigned options() const { return m_options; }
-
 	static QBareIntegration *instance();
 
 	QPlatformNativeInterface *nativeInterface() const;
@@ -33,11 +26,13 @@ public:
 
 	virtual void add_screen(QSize size);
 	virtual void test();
+	virtual void install_client(QBareClientInterface *client);
+
+	QBareClientInterface* client() const { return m_clientInterface; }
 
 private:
-	mutable QPlatformFontDatabase *m_dummyFontDatabase;
-	unsigned m_options;
 	QBareNativeInterface* m_nativeInterface;
+	QBareClientInterface* m_clientInterface;
 };
 
 QT_END_NAMESPACE
