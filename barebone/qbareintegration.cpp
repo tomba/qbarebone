@@ -32,14 +32,13 @@ QBareIntegration::QBareIntegration(const QStringList &parameters)
 {
 	printf("QBareIntegration()\n");
 
+	m_nativeInterface = new QBareNativeInterface(this);
+
 	if (qEnvironmentVariableIsSet(debugBackingStoreEnvironmentVariable)
 			&& qgetenv(debugBackingStoreEnvironmentVariable).toInt() > 0) {
 		m_options |= DebugBackingStore | EnableFonts;
 	}
 
-	QBareScreen *mPrimaryScreen = new QBareScreen(QRect(0, 0, 800, 800), 32, QImage::Format_ARGB32_Premultiplied);
-
-	screenAdded(mPrimaryScreen);
 }
 
 QBareIntegration::~QBareIntegration()
@@ -47,11 +46,18 @@ QBareIntegration::~QBareIntegration()
 	delete m_dummyFontDatabase;
 }
 
+void QBareIntegration::add_screen(QSize size)
+{
+	QBareScreen *screen = new QBareScreen(QRect(0, 0, size.width(), size.height()), 32, QImage::Format_ARGB32_Premultiplied);
+	screenAdded(screen);
+}
+
 bool QBareIntegration::hasCapability(QPlatformIntegration::Capability cap) const
 {
 	switch (cap) {
 	case ThreadedPixmaps: return true;
-	case MultipleWindows: return true;
+	case MultipleWindows: return false;
+	case WindowManagement: return false;
 	default: return QPlatformIntegration::hasCapability(cap);
 	}
 }
@@ -94,6 +100,18 @@ QAbstractEventDispatcher *QBareIntegration::createEventDispatcher() const
 QBareIntegration *QBareIntegration::instance()
 {
 	return static_cast<QBareIntegration *>(QGuiApplicationPrivate::platformIntegration());
+}
+
+QPlatformNativeInterface *QBareIntegration::nativeInterface() const
+{
+	printf("GET NATIVE\n");
+	return m_nativeInterface;
+}
+
+QPlatformServices *QBareIntegration::services() const
+{
+	printf("GET SERVICE\n");
+	return 0;
 }
 
 QT_END_NAMESPACE

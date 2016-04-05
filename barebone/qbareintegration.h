@@ -1,6 +1,7 @@
 #pragma once
 
 #include <qpa/qplatformintegration.h>
+#include "qbarenativeinterface.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -26,9 +27,15 @@ public:
 
 	static QBareIntegration *instance();
 
+	QPlatformNativeInterface *nativeInterface() const;
+	QPlatformServices *services() const;
+
+	void add_screen(QSize size);
+
 private:
 	mutable QPlatformFontDatabase *m_dummyFontDatabase;
 	unsigned m_options;
+	QBareNativeInterface* m_nativeInterface;
 };
 
 QT_END_NAMESPACE

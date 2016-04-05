@@ -4,13 +4,14 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui platformsupport-private
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = test
 TEMPLATE = app
 
+INCLUDEPATH += ../barebone
 
 SOURCES += main.cpp\
         mainwindow.cpp
