@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
 	printf("Create App\n");
 	QApplication a(argc, argv);
 
-	BB* bb;
+	BB* bb = nullptr;
 
 	if (a.platformName() == "barebone") {
 		printf("Create BB\n");
