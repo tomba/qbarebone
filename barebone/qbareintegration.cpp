@@ -1,6 +1,7 @@
 #include "qbareintegration.h"
 #include "qbarebackingstore.h"
 #include "qbarescreen.h"
+#include "qbarewindow.h"
 
 #include <QtGui/private/qpixmap_raster_p.h>
 #include <QtGui/private/qguiapplication_p.h>
@@ -8,6 +9,8 @@
 #include <qpa/qplatformfontdatabase.h>
 
 #include <QtPlatformSupport/private/qgenericunixeventdispatcher_p.h>
+
+#include <cstdio>
 
 QT_BEGIN_NAMESPACE
 
@@ -27,16 +30,14 @@ QBareIntegration::QBareIntegration(const QStringList &parameters)
 	: m_dummyFontDatabase(0)
 	, m_options(parseOptions(parameters))
 {
+	printf("QBareIntegration()\n");
+
 	if (qEnvironmentVariableIsSet(debugBackingStoreEnvironmentVariable)
 			&& qgetenv(debugBackingStoreEnvironmentVariable).toInt() > 0) {
 		m_options |= DebugBackingStore | EnableFonts;
 	}
 
-	QBareScreen *mPrimaryScreen = new QBareScreen();
-
-	mPrimaryScreen->mGeometry = QRect(0, 0, 240, 320);
-	mPrimaryScreen->mDepth = 32;
-	mPrimaryScreen->mFormat = QImage::Format_ARGB32_Premultiplied;
+	QBareScreen *mPrimaryScreen = new QBareScreen(QRect(0, 0, 800, 800), 32, QImage::Format_ARGB32_Premultiplied);
 
 	screenAdded(mPrimaryScreen);
 }
@@ -75,8 +76,7 @@ QPlatformFontDatabase *QBareIntegration::fontDatabase() const
 
 QPlatformWindow *QBareIntegration::createPlatformWindow(QWindow *window) const
 {
-	Q_UNUSED(window);
-	QPlatformWindow *w = new QPlatformWindow(window);
+	QBareWindow *w = new QBareWindow(window);
 	w->requestActivateWindow();
 	return w;
 }
@@ -88,15 +88,7 @@ QPlatformBackingStore *QBareIntegration::createPlatformBackingStore(QWindow *win
 
 QAbstractEventDispatcher *QBareIntegration::createEventDispatcher() const
 {
-#ifdef Q_OS_WIN
-#ifndef Q_OS_WINRT
-	return new QEventDispatcherWin32;
-#else // !Q_OS_WINRT
-	return new QEventDispatcherWinRT;
-#endif // Q_OS_WINRT
-#else
 	return createUnixEventDispatcher();
-#endif
 }
 
 QBareIntegration *QBareIntegration::instance()

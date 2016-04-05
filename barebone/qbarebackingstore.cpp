@@ -5,6 +5,8 @@
 #include <qpa/qplatformscreen.h>
 #include <private/qguiapplication_p.h>
 
+#include <cstdio>
+
 QT_BEGIN_NAMESPACE
 
 QBareBackingStore::QBareBackingStore(QWindow *window)
@@ -13,6 +15,8 @@ QBareBackingStore::QBareBackingStore(QWindow *window)
 {
 	if (mDebug)
 		qDebug() << "QMinimalBackingStore::QMinimalBackingStore:" << (quintptr)this;
+
+	printf("QBareBackingStore(wnd: %p)\n", window);
 }
 
 QBareBackingStore::~QBareBackingStore()
@@ -21,8 +25,7 @@ QBareBackingStore::~QBareBackingStore()
 
 QPaintDevice *QBareBackingStore::paintDevice()
 {
-	if (mDebug)
-		qDebug() << "QMinimalBackingStore::paintDevice";
+	printf("QBareBackingStore::paintDevice\n");
 
 	return &mImage;
 }
@@ -32,6 +35,8 @@ void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoi
 	Q_UNUSED(window);
 	Q_UNUSED(region);
 	Q_UNUSED(offset);
+
+	printf("QBareBackingStore::flush\n");
 
 	if (mDebug) {
 		static int c = 0;
@@ -43,6 +48,8 @@ void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoi
 
 void QBareBackingStore::resize(const QSize &size, const QRegion &)
 {
+	printf("QBareBackingStore::resize(%dx%d)\n", size.width(), size.height());
+
 	QImage::Format format = QGuiApplication::primaryScreen()->handle()->format();
 	if (mImage.size() != size)
 		mImage = QImage(size, format);

@@ -7,14 +7,13 @@ QT_BEGIN_NAMESPACE
 class QBareScreen : public QPlatformScreen
 {
 public:
-	QBareScreen()
-		: mDepth(32), mFormat(QImage::Format_ARGB32_Premultiplied) {}
+	QBareScreen(const QRect& geom, int depth, QImage::Format format);
 
 	QRect geometry() const { return mGeometry; }
 	int depth() const { return mDepth; }
 	QImage::Format format() const { return mFormat; }
 
-public:
+private:
 	QRect mGeometry;
 	int mDepth;
 	QImage::Format mFormat;

@@ -12,3 +12,8 @@ MainWindow::~MainWindow()
 {
 	delete ui;
 }
+
+void MainWindow::on_pushButton_clicked()
+{
+	ui->lcdNumber->display(ui->lcdNumber->intValue() + 1);
+}
