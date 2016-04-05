@@ -1,5 +1,4 @@
-#ifndef QBACKINGSTORE_MINIMAL_H
-#define QBACKINGSTORE_MINIMAL_H
+#pragma once
 
 #include <qpa/qplatformbackingstore.h>
 #include <qpa/qplatformwindow.h>
@@ -7,11 +6,11 @@
 
 QT_BEGIN_NAMESPACE
 
-class QMinimalBackingStore : public QPlatformBackingStore
+class QBareBackingStore : public QPlatformBackingStore
 {
 public:
-	QMinimalBackingStore(QWindow *window);
-	~QMinimalBackingStore();
+	QBareBackingStore(QWindow *window);
+	~QBareBackingStore();
 
 	QPaintDevice *paintDevice();
 	void flush(QWindow *window, const QRegion &region, const QPoint &offset);
@@ -23,5 +22,3 @@ private:
 };
 
 QT_END_NAMESPACE
-
-#endif

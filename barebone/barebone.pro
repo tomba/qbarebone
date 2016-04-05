@@ -4,8 +4,8 @@ TARGET = barebone
 TEMPLATE = lib
 CONFIG += plugin
 
-SOURCES += main.cpp qminimalintegration.cpp qminimalbackingstore.cpp
+SOURCES += main.cpp qbareintegration.cpp qbarebackingstore.cpp qbarescreen.cpp
 
-HEADERS += qminimalintegration.h qminimalbackingstore.h
+HEADERS += qbareintegration.h qbarebackingstore.h qbarescreen.h
 
 OTHER_FILES += barebone.json

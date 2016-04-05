@@ -1,18 +1,13 @@
-#include "qminimalintegration.h"
-#include "qminimalbackingstore.h"
+#include "qbareintegration.h"
+#include "qbarebackingstore.h"
+#include "qbarescreen.h"
 
 #include <QtGui/private/qpixmap_raster_p.h>
 #include <QtGui/private/qguiapplication_p.h>
 #include <qpa/qplatformwindow.h>
 #include <qpa/qplatformfontdatabase.h>
 
-#if !defined(Q_OS_WIN)
 #include <QtPlatformSupport/private/qgenericunixeventdispatcher_p.h>
-#elif defined(Q_OS_WINRT)
-#include <QtCore/private/qeventdispatcher_winrt_p.h>
-#else
-#include <QtCore/private/qeventdispatcher_win_p.h>
-#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -23,12 +18,12 @@ static inline unsigned parseOptions(const QStringList &paramList)
 	unsigned options = 0;
 	foreach (const QString &param, paramList) {
 		if (param == QLatin1String("enable_fonts"))
-			options |= QMinimalIntegration::EnableFonts;
+			options |= QBareIntegration::EnableFonts;
 	}
 	return options;
 }
 
-QMinimalIntegration::QMinimalIntegration(const QStringList &parameters)
+QBareIntegration::QBareIntegration(const QStringList &parameters)
 	: m_dummyFontDatabase(0)
 	, m_options(parseOptions(parameters))
 {
@@ -37,7 +32,7 @@ QMinimalIntegration::QMinimalIntegration(const QStringList &parameters)
 		m_options |= DebugBackingStore | EnableFonts;
 	}
 
-	QMinimalScreen *mPrimaryScreen = new QMinimalScreen();
+	QBareScreen *mPrimaryScreen = new QBareScreen();
 
 	mPrimaryScreen->mGeometry = QRect(0, 0, 240, 320);
 	mPrimaryScreen->mDepth = 32;
@@ -46,12 +41,12 @@ QMinimalIntegration::QMinimalIntegration(const QStringList &parameters)
 	screenAdded(mPrimaryScreen);
 }
 
-QMinimalIntegration::~QMinimalIntegration()
+QBareIntegration::~QBareIntegration()
 {
 	delete m_dummyFontDatabase;
 }
 
-bool QMinimalIntegration::hasCapability(QPlatformIntegration::Capability cap) const
+bool QBareIntegration::hasCapability(QPlatformIntegration::Capability cap) const
 {
 	switch (cap) {
 	case ThreadedPixmaps: return true;
@@ -69,7 +64,7 @@ public:
 	virtual void populateFontDatabase() {}
 };
 
-QPlatformFontDatabase *QMinimalIntegration::fontDatabase() const
+QPlatformFontDatabase *QBareIntegration::fontDatabase() const
 {
 	if (m_options & EnableFonts)
 		return QPlatformIntegration::fontDatabase();
@@ -78,7 +73,7 @@ QPlatformFontDatabase *QMinimalIntegration::fontDatabase() const
 	return m_dummyFontDatabase;
 }
 
-QPlatformWindow *QMinimalIntegration::createPlatformWindow(QWindow *window) const
+QPlatformWindow *QBareIntegration::createPlatformWindow(QWindow *window) const
 {
 	Q_UNUSED(window);
 	QPlatformWindow *w = new QPlatformWindow(window);
@@ -86,12 +81,12 @@ QPlatformWindow *QMinimalIntegration::createPlatformWindow(QWindow *window) cons
 	return w;
 }
 
-QPlatformBackingStore *QMinimalIntegration::createPlatformBackingStore(QWindow *window) const
+QPlatformBackingStore *QBareIntegration::createPlatformBackingStore(QWindow *window) const
 {
-	return new QMinimalBackingStore(window);
+	return new QBareBackingStore(window);
 }
 
-QAbstractEventDispatcher *QMinimalIntegration::createEventDispatcher() const
+QAbstractEventDispatcher *QBareIntegration::createEventDispatcher() const
 {
 #ifdef Q_OS_WIN
 #ifndef Q_OS_WINRT
@@ -104,9 +99,9 @@ QAbstractEventDispatcher *QMinimalIntegration::createEventDispatcher() const
 #endif
 }
 
-QMinimalIntegration *QMinimalIntegration::instance()
+QBareIntegration *QBareIntegration::instance()
 {
-	return static_cast<QMinimalIntegration *>(QGuiApplicationPrivate::platformIntegration());
+	return static_cast<QBareIntegration *>(QGuiApplicationPrivate::platformIntegration());
 }
 
 QT_END_NAMESPACE

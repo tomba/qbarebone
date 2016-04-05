@@ -1,6 +1,6 @@
 
 #include <qpa/qplatformintegrationplugin.h>
-#include "qminimalintegration.h"
+#include "qbareintegration.h"
 
 #include <cstdio>
 
@@ -19,7 +19,7 @@ QPlatformIntegration *QMinimalIntegrationPlugin::create(const QString& system, c
 	printf("CREATE %s\n", system.toLatin1().data());
 
 	if (!system.compare(QLatin1String("barebone"), Qt::CaseInsensitive))
-		return new QMinimalIntegration(paramList);
+		return new QBareIntegration(paramList);
 
 	return 0;
 }

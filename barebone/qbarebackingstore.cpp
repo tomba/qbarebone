@@ -1,5 +1,5 @@
-#include "qminimalbackingstore.h"
-#include "qminimalintegration.h"
+#include "qbarebackingstore.h"
+#include "qbareintegration.h"
 #include "qscreen.h"
 #include <QtCore/qdebug.h>
 #include <qpa/qplatformscreen.h>
@@ -7,19 +7,19 @@
 
 QT_BEGIN_NAMESPACE
 
-QMinimalBackingStore::QMinimalBackingStore(QWindow *window)
+QBareBackingStore::QBareBackingStore(QWindow *window)
 	: QPlatformBackingStore(window)
-	, mDebug(QMinimalIntegration::instance()->options() & QMinimalIntegration::DebugBackingStore)
+	, mDebug(QBareIntegration::instance()->options() & QBareIntegration::DebugBackingStore)
 {
 	if (mDebug)
 		qDebug() << "QMinimalBackingStore::QMinimalBackingStore:" << (quintptr)this;
 }
 
-QMinimalBackingStore::~QMinimalBackingStore()
+QBareBackingStore::~QBareBackingStore()
 {
 }
 
-QPaintDevice *QMinimalBackingStore::paintDevice()
+QPaintDevice *QBareBackingStore::paintDevice()
 {
 	if (mDebug)
 		qDebug() << "QMinimalBackingStore::paintDevice";
@@ -27,7 +27,7 @@ QPaintDevice *QMinimalBackingStore::paintDevice()
 	return &mImage;
 }
 
-void QMinimalBackingStore::flush(QWindow *window, const QRegion &region, const QPoint &offset)
+void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoint &offset)
 {
 	Q_UNUSED(window);
 	Q_UNUSED(region);
@@ -41,7 +41,7 @@ void QMinimalBackingStore::flush(QWindow *window, const QRegion &region, const Q
 	}
 }
 
-void QMinimalBackingStore::resize(const QSize &size, const QRegion &)
+void QBareBackingStore::resize(const QSize &size, const QRegion &)
 {
 	QImage::Format format = QGuiApplication::primaryScreen()->handle()->format();
 	if (mImage.size() != size)
