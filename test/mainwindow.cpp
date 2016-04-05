@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QPropertyAnimation>
+#include <QMouseEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -16,6 +17,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	animation->setLoopCount(10000);
 
 	animation->start();
+
+	setMouseTracking(true);
+	qApp->installEventFilter(this);
 }
 
 MainWindow::~MainWindow()
@@ -27,4 +31,15 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
 	ui->lcdNumber->display(ui->lcdNumber->intValue() + 1);
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event)
+{
+	if (event->type() == QEvent::MouseMove)
+	{
+		QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
+		printf("Mouse move %d,%d\n", mouseEvent->pos().x(), mouseEvent->pos().y());
+	}
+
+	return false;
 }

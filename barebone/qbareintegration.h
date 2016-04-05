@@ -6,11 +6,16 @@
 
 QT_BEGIN_NAMESPACE
 
+class QEvdevKeyboardManager;
+class QEvdevMouseManager;
+
 class QBareIntegration : public QPlatformIntegration, public QBareInterface
 {
 public:
 	explicit QBareIntegration(const QStringList &parameters);
 	~QBareIntegration();
+
+	void initialize();
 
 	bool hasCapability(QPlatformIntegration::Capability cap) const;
 	QPlatformFontDatabase *fontDatabase() const;
@@ -31,8 +36,12 @@ public:
 	QBareClientInterface* client() const { return m_clientInterface; }
 
 private:
+	QPlatformInputContext *m_inputContext;
 	QBareNativeInterface* m_nativeInterface;
 	QBareClientInterface* m_clientInterface;
+	void createInputHandlers();
+	QEvdevKeyboardManager* m_kbdMgr;
+	QEvdevMouseManager *m_mouseMgr;
 };
 
 QT_END_NAMESPACE

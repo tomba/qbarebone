@@ -8,8 +8,13 @@
 #include <QtGui/private/qguiapplication_p.h>
 #include <qpa/qplatformwindow.h>
 #include <qpa/qplatformfontdatabase.h>
+#include <qpa/qplatforminputcontext.h>
+
+#include <qpa/qplatforminputcontextfactory_p.h>
 
 #include <QtPlatformSupport/private/qgenericunixeventdispatcher_p.h>
+#include <QtPlatformSupport/private/qevdevkeyboardmanager_p.h>
+#include <QtPlatformSupport/private/qevdevmousemanager_p.h>
 
 #include <cstdio>
 
@@ -22,12 +27,35 @@ QBareIntegration::QBareIntegration(const QStringList &parameters)
 	printf("QBareIntegration()\n");
 
 	m_nativeInterface = new QBareNativeInterface(this);
+
 }
 
 QBareIntegration::~QBareIntegration()
 {
 }
 
+void QBareIntegration::initialize()
+{
+	printf("INIT\n");
+	m_inputContext = QPlatformInputContextFactory::create();
+
+	//createInputHandlers();
+}
+
+void QBareIntegration::createInputHandlers()
+{
+    //m_kbdMgr = new QEvdevKeyboardManager(QLatin1String("EvdevKeyboard"), QString() /* spec */);
+    m_mouseMgr = new QEvdevMouseManager(QLatin1String("EvdevMouse"), QString() /* spec */);
+
+#if 0
+    Q_FOREACH (QScreen *screen, QGuiApplication::screens()) {
+	QEGLPlatformCursor *cursor = static_cast<QEGLPlatformCursor *>(screen->handle()->cursor());
+	if (cursor)
+	    cursor->setMouseDeviceDiscovery(mouseMgr->deviceDiscovery());
+    }
+    new QEvdevTouchScreenHandlerThread(QString() /* spec */, this);
+#endif
+}
 
 void QBareIntegration::test()
 {

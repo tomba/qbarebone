@@ -3,6 +3,9 @@
 #include <QPluginLoader>
 #include <QScreen>
 #include <qpa/qplatformnativeinterface.h>
+#include <QtPlatformSupport/private/qevdevmousemanager_p.h>
+#include <QtPlatformSupport/private/qevdevkeyboardmanager_p.h>
+#include <qpa/qwindowsysteminterface.h>
 
 #include "qbareinterface.h"
 #include "qbareclientinterface.h"
@@ -12,8 +15,10 @@
 
 using namespace kms;
 
-class BB : public QBareClientInterface
+class BB : public QObject, public QBareClientInterface
 {
+	Q_OBJECT
+
 public:
 	BB(QApplication& a)
 	{
@@ -22,20 +27,50 @@ public:
 		QPlatformNativeInterface *native = a.platformNativeInterface();
 		QBareInterface* bare = (QBareInterface*)native->nativeResourceForIntegration("main");
 
-		for (const auto& pipe : m_card->get_connected_pipelines()) {
-			printf("Adding KMS crtc+connector %s\n", pipe.connector->fullname().c_str());
 
-			uint32_t w = pipe.crtc->width();
-			uint32_t h = pipe.crtc->height();
+		bare->install_client(this);
 
-			bare->add_screen(QSize(w, h));
 
-			m_fb = new DumbFramebuffer(*m_card, w, h, PixelFormat::ABGR8888);
 
-			pipe.crtc->set_mode(pipe.connector, *m_fb, pipe.crtc->mode());
+		Connector* conn = m_card->get_first_connected_connector();
 
-			bare->install_client(this);
+		if(!conn)
+			printf("No connector\n");
+
+		printf("Adding KMS crtc+connector %s\n", conn->fullname().c_str());
+
+		Crtc* crtc = conn->get_possible_crtcs().front();
+
+#if use_crtc
+		auto mode = conn->get_default_mode();
+		uint32_t w = mode.hdisplay;
+		uint32_t h = mode.vdisplay;
+		m_fb = new DumbFramebuffer(*m_card, w, h, PixelFormat::XRGB8888);
+		crtc->set_mode(conn, *m_fb, mode);
+#else
+		uint32_t w = 800;
+		uint32_t h = 800;
+
+		Plane* plane = 0;
+
+		for (Plane* p : crtc->get_possible_planes())
+		{
+			if (p->plane_type() != PlaneType::Overlay)
+				continue;
+
+			plane = p;
 		}
+
+		m_fb = new DumbFramebuffer(*m_card, 800, 800, PixelFormat::XRGB8888);
+
+		crtc->set_plane(plane, *m_fb, 0, 0, 800, 800, 0, 0, 800, 800);
+#endif
+
+		bare->add_screen(QSize(w, h));
+
+
+		m_keyManager = new QEvdevKeyboardManager(QLatin1String("EvdevKeyboard"), QString(), this);
+		m_mouseManager = new QEvdevMouseManager(QLatin1String("EvdevMouse"), QString(), this);
 	}
 
 	void test()
@@ -53,7 +88,11 @@ public:
 private:
 	Card* m_card;
 	DumbFramebuffer* m_fb;
+	QEvdevKeyboardManager* m_keyManager;
+	QEvdevMouseManager* m_mouseManager;
 };
+
+#include "main.moc"
 
 int main(int argc, char *argv[])
 {
