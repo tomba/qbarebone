@@ -1,16 +1,18 @@
 #include "qbarenativeinterface.h"
 #include "qbareinterface.h"
+#include "qbareintegration.h"
+
+#include <cstdio>
 
 QBareNativeInterface::QBareNativeInterface(QBareIntegration *integration)
 	: m_integration(integration)
 {
-	m_mainIface = new QBareInterface(m_integration);
 }
 
 void *QBareNativeInterface::nativeResourceForIntegration(const QByteArray &resource)
 {
 	if (resource == "main")
-		return m_mainIface;
+		return dynamic_cast<QBareInterface*>(m_integration);
 
 	return 0;
 }

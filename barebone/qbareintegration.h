@@ -2,10 +2,11 @@
 
 #include <qpa/qplatformintegration.h>
 #include "qbarenativeinterface.h"
+#include "qbareinterface.h"
 
 QT_BEGIN_NAMESPACE
 
-class QBareIntegration : public QPlatformIntegration
+class QBareIntegration : public QPlatformIntegration, public QBareInterface
 {
 public:
 	enum Options { // Options to be passed on command line or determined from environment
@@ -30,7 +31,8 @@ public:
 	QPlatformNativeInterface *nativeInterface() const;
 	QPlatformServices *services() const;
 
-	void add_screen(QSize size);
+	virtual void add_screen(QSize size);
+	virtual void test();
 
 private:
 	mutable QPlatformFontDatabase *m_dummyFontDatabase;

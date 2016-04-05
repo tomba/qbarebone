@@ -46,11 +46,19 @@ QBareIntegration::~QBareIntegration()
 	delete m_dummyFontDatabase;
 }
 
+
+void QBareIntegration::test()
+{
+	printf("TESTI\n");
+}
+
 void QBareIntegration::add_screen(QSize size)
 {
 	QBareScreen *screen = new QBareScreen(QRect(0, 0, size.width(), size.height()), 32, QImage::Format_ARGB32_Premultiplied);
 	screenAdded(screen);
 }
+
+
 
 bool QBareIntegration::hasCapability(QPlatformIntegration::Capability cap) const
 {

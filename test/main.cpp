@@ -27,8 +27,6 @@ int main(int argc, char *argv[])
 
 	if (a.platformName() == "barebone") {
 		QPlatformNativeInterface *native = a.platformNativeInterface();
-		printf("NATIVE %p\n", native);
-
 		QBareInterface* bare = (QBareInterface*)native->nativeResourceForIntegration("main");
 
 		bare->test();

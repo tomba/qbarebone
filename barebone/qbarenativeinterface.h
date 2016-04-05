@@ -3,7 +3,6 @@
 #include <qpa/qplatformnativeinterface.h>
 
 class QBareIntegration;
-class QBareInterface;
 
 class QBareNativeInterface : public QPlatformNativeInterface
 {
@@ -14,5 +13,4 @@ public:
 
 private:
 	QBareIntegration* m_integration;
-	QBareInterface *m_mainIface;
 };

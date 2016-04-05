@@ -6,8 +6,7 @@ CONFIG += plugin
 
 SOURCES += main.cpp qbareintegration.cpp qbarebackingstore.cpp qbarescreen.cpp \
     qbarewindow.cpp \
-    qbarenativeinterface.cpp \
-    qbareinterface.cpp
+    qbarenativeinterface.cpp
 
 HEADERS += qbareintegration.h qbarebackingstore.h qbarescreen.h \
     qbarewindow.h \
