@@ -22,8 +22,10 @@ LIBPATH     += /home/tomba/work/kmsxx/build/libkms++
 LIBS        += -lkms++ -ldrm
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    qbareclient.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    qbareclient.h
 
 FORMS    += mainwindow.ui
