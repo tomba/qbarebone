@@ -12,6 +12,7 @@ public:
 	QRect geometry() const { return mGeometry; }
 	int depth() const { return mDepth; }
 	QImage::Format format() const { return mFormat; }
+	QString name() const { return "myscreen"; }
 
 private:
 	QRect mGeometry;

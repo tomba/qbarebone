@@ -23,9 +23,15 @@ LIBS        += -lkms++ -ldrm
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    qbareclient.cpp
+    qbareclient.cpp \
+    openglwindow.cpp \
+    trianglewindow.cpp \
+    rasterwindow.cpp
 
 HEADERS  += mainwindow.h \
-    qbareclient.h
+    qbareclient.h \
+    openglwindow.h \
+    trianglewindow.h \
+    rasterwindow.h
 
 FORMS    += mainwindow.ui

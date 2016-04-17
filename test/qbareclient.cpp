@@ -10,6 +10,7 @@
 #include "qbareinterface.h"
 #include "qbareclientinterface.h"
 
+#include <assert.h>
 #include <cstdio>
 #include "kms++.h"
 
@@ -17,24 +18,22 @@ using namespace kms;
 
 QBareClient::QBareClient(QApplication& a)
 {
-	m_card = new Card();
-
-	QPlatformNativeInterface *native = a.platformNativeInterface();
+	QPlatformNativeInterface* native = a.platformNativeInterface();
+	assert(native);
 	QBareInterface* bare = (QBareInterface*)native->nativeResourceForIntegration("main");
+	assert(bare);
 
 
 	bare->install_client(this);
 
 
+	m_card = new Card();
 
 	Connector* conn = m_card->get_first_connected_connector();
+	assert(conn);
 
-	if(!conn)
-		printf("No connector\n");
-
-	printf("Adding KMS crtc+connector %s\n", conn->fullname().c_str());
-
-	Crtc* crtc = conn->get_possible_crtcs().front();
+	Crtc* crtc = conn->get_current_crtc();
+	assert(crtc);
 
 #if use_crtc
 	auto mode = conn->get_default_mode();
@@ -43,8 +42,10 @@ QBareClient::QBareClient(QApplication& a)
 	m_fb = new DumbFramebuffer(*m_card, w, h, PixelFormat::XRGB8888);
 	crtc->set_mode(conn, *m_fb, mode);
 #else
-	uint32_t w = 800;
-	uint32_t h = 800;
+	auto mode = crtc->mode();
+
+	uint32_t w = mode.hdisplay / 2;
+	uint32_t h = mode.vdisplay / 2;
 
 	Plane* plane = 0;
 
@@ -56,9 +57,11 @@ QBareClient::QBareClient(QApplication& a)
 		plane = p;
 	}
 
-	m_fb = new DumbFramebuffer(*m_card, 800, 800, PixelFormat::XRGB8888);
+	m_fb = new DumbFramebuffer(*m_card, w, h, PixelFormat::XRGB8888);
 
-	crtc->set_plane(plane, *m_fb, 0, 0, 800, 800, 0, 0, 800, 800);
+	crtc->set_plane(plane, *m_fb,
+			0, 0, w, h,
+			0, 0, w, h);
 #endif
 
 	bare->add_screen(QSize(w, h));
