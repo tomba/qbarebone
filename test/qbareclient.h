@@ -4,7 +4,7 @@
 #include <QObject>
 #include "qbareclientinterface.h"
 
-#include "kms++.h"
+#include <kms++/kms++.h>
 
 struct QEvdevKeyboardManager;
 struct QEvdevMouseManager;

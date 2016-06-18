@@ -12,7 +12,7 @@
 
 #include <assert.h>
 #include <cstdio>
-#include "kms++.h"
+#include <kms++/kms++.h>
 
 using namespace kms;
 
