@@ -24,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+	setMouseTracking(false);
+	qApp->removeEventFilter(this);
+
 	delete ui;
 }
 

@@ -12,27 +12,32 @@
 int main(int argc, char *argv[])
 {
 	printf("Create App\n");
-	QApplication a(argc, argv);
+	QApplication app(argc, argv);
 
 	QBareClient* bb = nullptr;
 
-	if (a.platformName() == "barebone") {
+	if (app.platformName() == "barebone") {
 		printf("Create BB\n");
-		bb = new QBareClient(a);
+		bb = new QBareClient(app);
 	}
 
 #if 0
-	auto screens = a.screens();
+	{
+		printf("Open MainWindow\n");
 
-	for (int i = 0; i < screens.size(); ++i) {
-		qDebug() << QString("Create window on screen %1").arg(screens.at(i)->name());
+		auto screens = app.screens();
 
-		MainWindow *w = new MainWindow();
-		w->show();
+		for (int i = 0; i < screens.size(); ++i) {
+			qDebug() << QString("Create window on screen %1").arg(screens.at(i)->name());
+
+			MainWindow *w = new MainWindow();
+			w->show();
+		}
 	}
 #endif
-#if 1
+#if 0
 	{
+		printf("Open TriangleWindow\n");
 		QSurfaceFormat format;
 		format.setSamples(16);
 
@@ -44,14 +49,15 @@ int main(int argc, char *argv[])
 		window->setAnimating(true);
 	}
 #endif
-#if 0
+#if 1
 	{
+		printf("Open RasterWindow\n");
 		RasterWindow *w = new RasterWindow();
 		w->show();
 	}
 #endif
 	printf("Enter mainloop\n");
-	int r = a.exec();
+	int r = app.exec();
 
 	if (bb)
 		delete bb;
