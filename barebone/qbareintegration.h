@@ -1,12 +1,8 @@
 #pragma once
 
-
 #include <qpa/qplatformintegration.h>
-
 #include "qbarenativeinterface.h"
 #include "qbareinterface.h"
-
-typedef void* EGLDisplay;
 
 QT_BEGIN_NAMESPACE
 
@@ -26,9 +22,6 @@ public:
 
 	QPlatformWindow *createPlatformWindow(QWindow *window) const;
 	QPlatformBackingStore *createPlatformBackingStore(QWindow *window) const;
-	QPlatformOpenGLContext *createPlatformOpenGLContext(QOpenGLContext *context) const;
-	QPlatformOffscreenSurface *createPlatformOffscreenSurface(QOffscreenSurface *surface) const;
-
 	QAbstractEventDispatcher *createEventDispatcher() const;
 
 	static QBareIntegration *instance();
@@ -49,8 +42,6 @@ private:
 	void createInputHandlers();
 	QEvdevKeyboardManager* m_kbdMgr;
 	QEvdevMouseManager *m_mouseMgr;
-
-	EGLDisplay m_eglDisplay;
 };
 
 QT_END_NAMESPACE

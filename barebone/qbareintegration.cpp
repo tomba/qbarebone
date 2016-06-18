@@ -3,23 +3,18 @@
 #include "qbarescreen.h"
 #include "qbarewindow.h"
 #include "qbareclientinterface.h"
-#include "qbareplatformopenglcontext.h"
-
-#include <QOffscreenSurface>
 
 #include <QtGui/private/qpixmap_raster_p.h>
 #include <QtGui/private/qguiapplication_p.h>
 #include <qpa/qplatformwindow.h>
 #include <qpa/qplatformfontdatabase.h>
 #include <qpa/qplatforminputcontext.h>
-#include <qpa/qplatformoffscreensurface.h>
 
 #include <qpa/qplatforminputcontextfactory_p.h>
 
 #include <QtPlatformSupport/private/qgenericunixeventdispatcher_p.h>
 #include <QtPlatformSupport/private/qevdevkeyboardmanager_p.h>
 #include <QtPlatformSupport/private/qevdevmousemanager_p.h>
-#include <QtPlatformSupport/private/qeglpbuffer_p.h>
 
 #include <cstdio>
 
@@ -49,16 +44,16 @@ void QBareIntegration::initialize()
 
 void QBareIntegration::createInputHandlers()
 {
-	//m_kbdMgr = new QEvdevKeyboardManager(QLatin1String("EvdevKeyboard"), QString() /* spec */);
-	m_mouseMgr = new QEvdevMouseManager(QLatin1String("EvdevMouse"), QString() /* spec */);
+    //m_kbdMgr = new QEvdevKeyboardManager(QLatin1String("EvdevKeyboard"), QString() /* spec */);
+    m_mouseMgr = new QEvdevMouseManager(QLatin1String("EvdevMouse"), QString() /* spec */);
 
 #if 0
-	Q_FOREACH (QScreen *screen, QGuiApplication::screens()) {
-		QEGLPlatformCursor *cursor = static_cast<QEGLPlatformCursor *>(screen->handle()->cursor());
-		if (cursor)
-			cursor->setMouseDeviceDiscovery(mouseMgr->deviceDiscovery());
-	}
-	new QEvdevTouchScreenHandlerThread(QString() /* spec */, this);
+    Q_FOREACH (QScreen *screen, QGuiApplication::screens()) {
+	QEGLPlatformCursor *cursor = static_cast<QEGLPlatformCursor *>(screen->handle()->cursor());
+	if (cursor)
+	    cursor->setMouseDeviceDiscovery(mouseMgr->deviceDiscovery());
+    }
+    new QEvdevTouchScreenHandlerThread(QString() /* spec */, this);
 #endif
 }
 
@@ -79,21 +74,13 @@ void QBareIntegration::install_client(QBareClientInterface* client)
 	m_clientInterface = client;
 }
 
+
 bool QBareIntegration::hasCapability(QPlatformIntegration::Capability cap) const
 {
 	switch (cap) {
 	case ThreadedPixmaps: return true;
-
-	//case MultipleWindows: return false;
-	//case WindowManagement: return false;
-
-	case ApplicationState: return true;
-	case NativeWidgets: return true;
-	case OpenGL: return true;
-	case ForeignWindows: return true;
-	//case ThreadedOpenGL: return !needsBasicRenderloopWorkaround();
-	case RasterGLSurface: return true;
-
+	case MultipleWindows: return false;
+	case WindowManagement: return false;
 	default: return QPlatformIntegration::hasCapability(cap);
 	}
 }
@@ -113,27 +100,6 @@ QPlatformWindow *QBareIntegration::createPlatformWindow(QWindow *window) const
 QPlatformBackingStore *QBareIntegration::createPlatformBackingStore(QWindow *window) const
 {
 	return new QBareBackingStore(window, (QBareIntegration*)this);
-}
-
-QPlatformOpenGLContext *QBareIntegration::createPlatformOpenGLContext(QOpenGLContext *context) const
-{
-	QSurfaceFormat format(context->format());
-	format.setAlphaBufferSize(8);
-	format.setRedBufferSize(8);
-	format.setGreenBufferSize(8);
-	format.setBlueBufferSize(8);
-	return new QBarePlatformOpenGLContext(format, context->shareHandle(), m_eglDisplay);
-}
-
-QPlatformOffscreenSurface *QBareIntegration::createPlatformOffscreenSurface(QOffscreenSurface *surface) const
-{
-	QSurfaceFormat format(surface->requestedFormat());
-	format.setAlphaBufferSize(8);
-	format.setRedBufferSize(8);
-	format.setGreenBufferSize(8);
-	format.setBlueBufferSize(8);
-
-	return new QEGLPbuffer(m_eglDisplay, format, surface);
 }
 
 QAbstractEventDispatcher *QBareIntegration::createEventDispatcher() const

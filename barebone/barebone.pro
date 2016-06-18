@@ -14,14 +14,12 @@ UI_DIR = $$DESTDIR/.ui
 
 SOURCES += main.cpp qbareintegration.cpp qbarebackingstore.cpp qbarescreen.cpp \
     qbarewindow.cpp \
-    qbarenativeinterface.cpp \
-    qbareplatformopenglcontext.cpp
+    qbarenativeinterface.cpp
 
 HEADERS += qbareintegration.h qbarebackingstore.h qbarescreen.h \
     qbarewindow.h \
     qbarenativeinterface.h \
     qbareinterface.h \
-    qbareclientinterface.h \
-    qbareplatformopenglcontext.h
+    qbareclientinterface.h
 
 OTHER_FILES += barebone.json

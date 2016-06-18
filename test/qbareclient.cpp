@@ -14,11 +14,6 @@
 #include <cstdio>
 #include <kms++/kms++.h>
 
-#include "cube-egl.h"
-#include "cube-gbm.h"
-
-#include <gbm.h>
-
 using namespace kms;
 
 QBareClient::QBareClient(QApplication& a)
@@ -28,14 +23,11 @@ QBareClient::QBareClient(QApplication& a)
 	QBareInterface* bare = (QBareInterface*)native->nativeResourceForIntegration("main");
 	assert(bare);
 
+
 	bare->install_client(this);
 
 
 	m_card = new Card();
-	m_gbm = new GbmDevice(*m_card);
-	m_eglState = new EglState(m_gbm);
-
-
 
 	Connector* conn = m_card->get_first_connected_connector();
 	assert(conn);
@@ -49,7 +41,7 @@ QBareClient::QBareClient(QApplication& a)
 	uint32_t h = mode.vdisplay;
 	m_fb = new DumbFramebuffer(*m_card, w, h, PixelFormat::XRGB8888);
 	crtc->set_mode(conn, *m_fb, mode);
-#elif use_plane
+#else
 	auto mode = crtc->mode();
 
 	uint32_t w = mode.hdisplay / 2;
@@ -70,30 +62,6 @@ QBareClient::QBareClient(QApplication& a)
 	crtc->set_plane(plane, *m_fb,
 			0, 0, w, h,
 			0, 0, w, h);
-#else
-	auto mode = crtc->mode();
-
-	uint32_t w = mode.hdisplay / 2;
-	uint32_t h = mode.vdisplay / 2;
-
-	Plane* plane = 0;
-
-	for (Plane* p : crtc->get_possible_planes())
-	{
-		if (p->plane_type() != PlaneType::Overlay)
-			continue;
-
-		plane = p;
-	}
-
-	m_surface = new GbmEglSurface(*m_card, *m_gbm, *m_eglState, w, h);
-	m_bo = m_surface->lock_next_bo();
-	Framebuffer* fb = m_surface->drm_fb_get_from_bo(m_bo, *m_card);
-
-	crtc->set_plane(plane, *fb,
-			0, 0, w, h,
-			0, 0, w, h);
-
 #endif
 
 	bare->add_screen(QSize(w, h));
@@ -112,11 +80,5 @@ QImage QBareClient::get_qimage(const QSize& size)
 {
 	printf("GET QIMAGE %dx%d\n", size.width(), size.height());
 
-	uint32_t w = gbm_bo_get_width(m_bo);
-	uint32_t h = gbm_bo_get_height(m_bo);
-	uint32_t stride = gbm_bo_get_stride(m_bo);
-	//gbm_bo_
-
-	//return QImage(m_fb->map(0), w, h, stride, QImage::Format::Format_ARGB32);
-	return QImage();
+	return QImage(m_fb->map(0), m_fb->width(), m_fb->height(), m_fb->stride(0), QImage::Format::Format_ARGB32);
 }
