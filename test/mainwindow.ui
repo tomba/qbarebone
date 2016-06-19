@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>254</width>
-    <height>310</height>
+    <width>222</width>
+    <height>333</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Titteli</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QPushButton" name="pushButton">
@@ -43,10 +43,18 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>254</width>
-     <height>25</height>
+     <width>222</width>
+     <height>24</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuTitteli">
+    <property name="title">
+     <string>Foobar</string>
+    </property>
+    <addaction name="actionMenutus"/>
+    <addaction name="actionKalatus"/>
+   </widget>
+   <addaction name="menuTitteli"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -57,6 +65,16 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionMenutus">
+   <property name="text">
+    <string>Menutus</string>
+   </property>
+  </action>
+  <action name="actionKalatus">
+   <property name="text">
+    <string>kalatus</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

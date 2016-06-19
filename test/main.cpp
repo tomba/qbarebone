@@ -8,9 +8,16 @@
 #include "rasterwindow.h"
 
 #include <cstdio>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/kd.h>
 
 int main(int argc, char *argv[])
 {
+	int tty = open("/dev/tty1", O_RDWR);
+	ioctl(tty, KDSETMODE, KD_GRAPHICS);
+
+
 	printf("Create App\n");
 	QApplication a(argc, argv);
 
@@ -21,17 +28,17 @@ int main(int argc, char *argv[])
 		bb = new QBareClient(a);
 	}
 
-#if 0
+#if 1
 	auto screens = a.screens();
 
 	for (int i = 0; i < screens.size(); ++i) {
-		qDebug() << QString("Create window on screen %1").arg(screens.at(i)->name());
+		//qDebug() << QString("Create window on screen %1").arg(screens.at(i)->name());
 
 		MainWindow *w = new MainWindow();
 		w->show();
 	}
 #endif
-#if 1
+#if 0
 	{
 		QSurfaceFormat format;
 		format.setSamples(16);

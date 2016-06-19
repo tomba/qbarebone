@@ -6,6 +6,7 @@
 #include <QtGui/private/qguiapplication_p.h>
 #include <qpa/qplatformwindow.h>
 #include <qpa/qplatformfontdatabase.h>
+#include <qpa/qplatformcursor.h>
 
 #include <cstdio>
 
@@ -15,6 +16,13 @@ QBareScreen::QBareScreen(const QRect &geom, int depth, QImage::Format format)
 	: mGeometry(geom), mDepth(depth), mFormat(format)
 {
 	printf("QBareScreen(%dx%d)\n", geom.width(), geom.height());
+
+	m_cursor = new QBareCursor(this);
+}
+
+QPlatformCursor* QBareScreen::cursor() const
+{
+	return m_cursor;
 }
 
 QT_END_NAMESPACE

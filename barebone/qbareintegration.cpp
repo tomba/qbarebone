@@ -15,6 +15,7 @@
 #include <QtPlatformSupport/private/qgenericunixeventdispatcher_p.h>
 #include <QtPlatformSupport/private/qevdevkeyboardmanager_p.h>
 #include <QtPlatformSupport/private/qevdevmousemanager_p.h>
+#include <QtPlatformSupport/private/qgenericunixfontdatabase_p.h>
 
 #include <cstdio>
 
@@ -28,6 +29,7 @@ QBareIntegration::QBareIntegration(const QStringList &parameters)
 
 	m_nativeInterface = new QBareNativeInterface(this);
 
+	m_fontDatabase.reset(new QGenericUnixFontDatabase());
 }
 
 QBareIntegration::~QBareIntegration()
@@ -45,7 +47,7 @@ void QBareIntegration::initialize()
 void QBareIntegration::createInputHandlers()
 {
     //m_kbdMgr = new QEvdevKeyboardManager(QLatin1String("EvdevKeyboard"), QString() /* spec */);
-    m_mouseMgr = new QEvdevMouseManager(QLatin1String("EvdevMouse"), QString() /* spec */);
+    //m_mouseMgr = new QEvdevMouseManager(QLatin1String("EvdevMouse"), QString() /* spec */);
 
 #if 0
     Q_FOREACH (QScreen *screen, QGuiApplication::screens()) {
@@ -80,14 +82,17 @@ bool QBareIntegration::hasCapability(QPlatformIntegration::Capability cap) const
 	switch (cap) {
 	case ThreadedPixmaps: return true;
 	case MultipleWindows: return false;
+	case NonFullScreenWindows: return false;
 	case WindowManagement: return false;
+	case OpenGL: return false;
 	default: return QPlatformIntegration::hasCapability(cap);
 	}
 }
 
 QPlatformFontDatabase *QBareIntegration::fontDatabase() const
 {
-	return QPlatformIntegration::fontDatabase();
+	//return QPlatformIntegration::fontDatabase();
+	return m_fontDatabase.data();
 }
 
 QPlatformWindow *QBareIntegration::createPlatformWindow(QWindow *window) const
@@ -114,13 +119,13 @@ QBareIntegration *QBareIntegration::instance()
 
 QPlatformNativeInterface *QBareIntegration::nativeInterface() const
 {
-	printf("GET NATIVE\n");
+	//printf("GET NATIVE\n");
 	return m_nativeInterface;
 }
 
 QPlatformServices *QBareIntegration::services() const
 {
-	printf("GET SERVICE\n");
+	//printf("GET SERVICE\n");
 	return 0;
 }
 

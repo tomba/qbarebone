@@ -1,0 +1,71 @@
+#include "qbarecursor.h"
+#include <QtCore/QCoreApplication>
+#include <QWindow>
+#include "qbarewindow.h"
+
+QT_BEGIN_NAMESPACE
+
+QBareCursor::QBareCursor(QPlatformScreen *screen)
+    : m_screen(screen)
+{
+#ifndef QT_NO_CURSOR
+    m_image.reset(new QPlatformCursorImage(0, 0, 0, 0, 0, 0));
+#endif
+}
+
+#ifndef QT_NO_CURSOR
+void QBareCursor::changeCursor(QCursor *cursor, QWindow *)
+{
+    //int xSpot;
+    //int ySpot;
+    QPixmap map;
+
+    //printf("Change cursor\n");
+
+    const Qt::CursorShape newShape = cursor ? cursor->shape() : Qt::ArrowCursor;
+    if (newShape != Qt::BitmapCursor) {
+	m_image->set(newShape);
+	//xSpot = m_image->hotspot().x();
+	//ySpot = m_image->hotspot().y();
+	QImage *i = m_image->image();
+	map = QPixmap::fromImage(*i);
+    } else {
+	//QPoint point = cursor->hotSpot();
+	//xSpot = point.x();
+	//ySpot = point.y();
+	map = cursor->pixmap();
+    }
+
+/*
+    DFBResult res;
+    IDirectFBDisplayLayer *layer = toDfbLayer(m_screen);
+    IDirectFBSurface* surface(QDirectFbConvenience::dfbSurfaceForPlatformPixmap(map.handle()));
+
+    res = layer->SetCooperativeLevel(layer, DLSCL_ADMINISTRATIVE);
+    if (res != DFB_OK) {
+	DirectFBError("Failed to set DLSCL_ADMINISTRATIVE", res);
+	return;
+    }
+
+    layer->SetCursorShape(layer, surface, xSpot, ySpot);
+    layer->SetCooperativeLevel(layer, DLSCL_SHARED);
+    */
+}
+
+void QBareCursor::pointerEvent(const QMouseEvent& event)
+{
+	printf("PointerEvent\n");
+	QWindow* wnd = m_screen->topLevelAt(event.pos());
+	QBareWindow* pwnd = (QBareWindow*)wnd->handle();
+	pwnd->invalidateSurface();
+	pwnd->requestUpdate();
+}
+
+void QBareCursor::setPos(const QPoint& pos)
+{
+	printf("setPos %u,%u\n", pos.x(), pos.y());
+	QPlatformCursor::setPos(pos);
+}
+#endif
+
+QT_END_NAMESPACE

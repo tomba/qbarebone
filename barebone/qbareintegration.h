@@ -42,6 +42,7 @@ private:
 	void createInputHandlers();
 	QEvdevKeyboardManager* m_kbdMgr;
 	QEvdevMouseManager *m_mouseMgr;
+	QScopedPointer<QPlatformFontDatabase> m_fontDatabase;
 };
 
 QT_END_NAMESPACE

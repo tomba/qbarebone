@@ -7,6 +7,8 @@ CONFIG += c++11
 TARGET = test
 TEMPLATE = app
 
+QMAKE_CXXFLAGS += -Wno-unused-parameter
+
 release: DESTDIR = build/release
 debug:   DESTDIR = build/debug
 
@@ -18,8 +20,9 @@ UI_DIR = $$DESTDIR/.ui
 INCLUDEPATH += ../barebone
 
 INCLUDEPATH += /home/tomba/work-lappy/kmsxx/kms++/inc
+INCLUDEPATH += /home/tomba/work-lappy/kmsxx/kms++util/inc
 LIBPATH     += /home/tomba/work-lappy/kmsxx/build/lib
-LIBS        += -lkms++ -ldrm
+LIBS        += -lkms++ -lkms++util -ldrm
 
 SOURCES += main.cpp\
         mainwindow.cpp \

@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
+	move(0, 0);
 
 	QPropertyAnimation* animation = new QPropertyAnimation(ui->pushButton, "geometry");
 	animation->setDuration(2000);
@@ -16,10 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
 	animation->setEndValue(QRect(50, 50, 100, 30));
 	animation->setLoopCount(10000);
 
-	animation->start();
+	//animation->start();
 
-	setMouseTracking(true);
-	qApp->installEventFilter(this);
+	//setMouseTracking(true);
+	//qApp->installEventFilter(this);
 }
 
 MainWindow::~MainWindow()

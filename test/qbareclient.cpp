@@ -5,7 +5,9 @@
 #include <qpa/qplatformnativeinterface.h>
 #include <QtPlatformSupport/private/qevdevmousemanager_p.h>
 #include <QtPlatformSupport/private/qevdevkeyboardmanager_p.h>
+#include <QtPlatformSupport/private/qevdevtouchmanager_p.h>
 #include <qpa/qwindowsysteminterface.h>
+#include <QPainter>
 
 #include "qbareinterface.h"
 #include "qbareclientinterface.h"
@@ -13,15 +15,16 @@
 #include <assert.h>
 #include <cstdio>
 #include <kms++/kms++.h>
+#include <kms++util/kms++util.h>
 
 using namespace kms;
 
 QBareClient::QBareClient(QApplication& a)
 {
 	QPlatformNativeInterface* native = a.platformNativeInterface();
-	assert(native);
+	ASSERT(native);
 	QBareInterface* bare = (QBareInterface*)native->nativeResourceForIntegration("main");
-	assert(bare);
+	ASSERT(bare);
 
 
 	bare->install_client(this);
@@ -30,17 +33,22 @@ QBareClient::QBareClient(QApplication& a)
 	m_card = new Card();
 
 	Connector* conn = m_card->get_first_connected_connector();
-	assert(conn);
+	ASSERT(conn);
 
 	Crtc* crtc = conn->get_current_crtc();
-	assert(crtc);
+	ASSERT(crtc);
 
-#if use_crtc
+#if !use_crtc
 	auto mode = conn->get_default_mode();
 	uint32_t w = mode.hdisplay;
 	uint32_t h = mode.vdisplay;
 	m_fb = new DumbFramebuffer(*m_card, w, h, PixelFormat::XRGB8888);
-	crtc->set_mode(conn, *m_fb, mode);
+	draw_test_pattern(*m_fb);
+	int r = crtc->set_mode(conn, *m_fb, mode);
+	ASSERT(r == 0);
+
+	m_conn = conn;
+	m_crtc = crtc;
 #else
 	auto mode = crtc->mode();
 
@@ -64,11 +72,14 @@ QBareClient::QBareClient(QApplication& a)
 			0, 0, w, h);
 #endif
 
+	m_image = QImage(m_fb->map(0), m_fb->width(), m_fb->height(), m_fb->stride(0), QImage::Format::Format_ARGB32);
+
 	bare->add_screen(QSize(w, h));
 
 
-	m_keyManager = new QEvdevKeyboardManager(QLatin1String("EvdevKeyboard"), QString(), this);
+	//m_keyManager = new QEvdevKeyboardManager(QLatin1String("EvdevKeyboard"), QString(), this);
 	m_mouseManager = new QEvdevMouseManager(QLatin1String("EvdevMouse"), QString(), this);
+	//new QEvdevTouchManager("EvdevTouch", QString(), this);
 }
 
 void QBareClient::test()
@@ -76,9 +87,29 @@ void QBareClient::test()
 	printf("CLIENT TTEST\n");
 }
 
-QImage QBareClient::get_qimage(const QSize& size)
+void QBareClient::flush()
 {
-	printf("GET QIMAGE %dx%d\n", size.width(), size.height());
+	//printf("flush: %u\n", m_cur_fb);
 
-	return QImage(m_fb->map(0), m_fb->width(), m_fb->height(), m_fb->stride(0), QImage::Format::Format_ARGB32);
+	QPoint pos = QCursor::pos();
+
+	QPainter p;
+	p.begin(&m_image);
+	p.drawRect(pos.x(), pos.y(), 10, 10);
+	p.end();
+
+	return m_fb->flush();
+
+}
+
+QPaintDevice*QBareClient::paintDevice()
+{
+	//printf("get paint dev: %u\n", m_cur_fb);
+
+	return &m_image;
+}
+
+void QBareClient::resize(const QSize& size, const QRegion& staticContents)
+{
+
 }

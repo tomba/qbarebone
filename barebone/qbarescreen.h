@@ -1,6 +1,7 @@
 #pragma once
 
 #include <qpa/qplatformscreen.h>
+#include "qbarecursor.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -14,11 +15,14 @@ public:
 	QImage::Format format() const { return mFormat; }
 	QString name() const { return "myscreen"; }
 
+	QPlatformCursor *cursor() const;
+
 private:
 	QRect mGeometry;
 	int mDepth;
 	QImage::Format mFormat;
 	QSize mPhysicalSize;
+	QBareCursor* m_cursor;
 };
 
 QT_END_NAMESPACE

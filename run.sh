@@ -12,5 +12,8 @@ export QT_PLUGIN_PATH=./plugins
 mkdir -p plugins/platforms
 ln -fs ../../barebone/build/debug/libbarebone.so plugins/platforms/
 
+# For qemu
+export QT_QPA_EVDEV_MOUSE_PARAMETERS=abs
+
 ./test/build/debug/test -platform barebone
 

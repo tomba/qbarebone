@@ -7,7 +7,8 @@ QT_BEGIN_NAMESPACE
 QBareWindow::QBareWindow(QWindow *window)
 	:QPlatformWindow(window)
 {
-	printf("QBareWindow(%p, %dx%d)\n", window, window->width(), window->height());
+	printf("QBareWindow(%p, %d,%d %dx%d)\n", window,
+	       window->x(), window->y(), window->width(), window->height());
 
 }
 

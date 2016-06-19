@@ -23,9 +23,13 @@ QBareBackingStore::~QBareBackingStore()
 
 QPaintDevice *QBareBackingStore::paintDevice()
 {
-	printf("QBareBackingStore::paintDevice\n");
+	//printf("QBareBackingStore::paintDevice\n");
 
-	return &mImage;
+
+	QPaintDevice *p = m_integration->client()->paintDevice();
+	return p;
+
+	//return &mImage;
 }
 
 void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoint &offset)
@@ -34,7 +38,9 @@ void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoi
 	Q_UNUSED(region);
 	Q_UNUSED(offset);
 
-	printf("QBareBackingStore::flush\n");
+	printf("QBareBackingStore::flush(%p, %u,%u %ux%u)\n", window,
+	       region.boundingRect().x(), region.boundingRect().y(),
+	       region.boundingRect().width(), region.boundingRect().height());
 
 	if (false) {
 		static int c = 0;
@@ -42,17 +48,21 @@ void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoi
 		qDebug() << "QMinimalBackingStore::flush() saving contents to" << filename.toLocal8Bit().constData();
 		mImage.save(filename);
 	}
+
+	m_integration->client()->flush();
 }
 
-void QBareBackingStore::resize(const QSize &size, const QRegion &)
+void QBareBackingStore::resize(const QSize &size, const QRegion &staticContents)
 {
 	printf("QBareBackingStore::resize(%dx%d)\n", size.width(), size.height());
 
-	QImage::Format format = QGuiApplication::primaryScreen()->handle()->format();
+	//QImage::Format format = QGuiApplication::primaryScreen()->handle()->format();
 	//if (mImage.size() != size)
 	//	mImage = QImage(size, format);
 
-	mImage = m_integration->client()->get_qimage(size);
+	//mImage = m_integration->client()->get_qimage(size);
+
+	m_integration->client()->resize(size, staticContents);
 }
 
 QT_END_NAMESPACE

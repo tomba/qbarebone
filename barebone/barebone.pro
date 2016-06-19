@@ -4,6 +4,11 @@ TARGET = barebone
 TEMPLATE = lib
 CONFIG += plugin
 
+QMAKE_CXXFLAGS += -Wno-unused-parameter
+
+DEFINES += Q_FONTCONFIGDATABASE
+LIBS += -lfontconfig
+
 release: DESTDIR = build/release
 debug:   DESTDIR = build/debug
 
@@ -14,12 +19,14 @@ UI_DIR = $$DESTDIR/.ui
 
 SOURCES += main.cpp qbareintegration.cpp qbarebackingstore.cpp qbarescreen.cpp \
     qbarewindow.cpp \
-    qbarenativeinterface.cpp
+    qbarenativeinterface.cpp \
+    qbarecursor.cpp
 
 HEADERS += qbareintegration.h qbarebackingstore.h qbarescreen.h \
     qbarewindow.h \
     qbarenativeinterface.h \
     qbareinterface.h \
-    qbareclientinterface.h
+    qbareclientinterface.h \
+    qbarecursor.h
 
 OTHER_FILES += barebone.json
