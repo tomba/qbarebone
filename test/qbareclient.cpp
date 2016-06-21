@@ -74,7 +74,8 @@ QBareClient::QBareClient(QApplication& a)
 
 	m_image = QImage(m_fb->map(0), m_fb->width(), m_fb->height(), m_fb->stride(0), QImage::Format::Format_ARGB32);
 
-	bare->add_screen(QSize(w, h));
+	m_screen = bare->add_screen(QSize(w, h));
+	m_screen->setBackbuffer(&m_image);
 
 
 	//m_keyManager = new QEvdevKeyboardManager(QLatin1String("EvdevKeyboard"), QString(), this);
@@ -91,25 +92,6 @@ void QBareClient::flush()
 {
 	//printf("flush: %u\n", m_cur_fb);
 
-	QPoint pos = QCursor::pos();
-
-	QPainter p;
-	p.begin(&m_image);
-	p.drawRect(pos.x(), pos.y(), 10, 10);
-	p.end();
-
 	return m_fb->flush();
-
-}
-
-QPaintDevice*QBareClient::paintDevice()
-{
-	//printf("get paint dev: %u\n", m_cur_fb);
-
-	return &m_image;
-}
-
-void QBareClient::resize(const QSize& size, const QRegion& staticContents)
-{
 
 }

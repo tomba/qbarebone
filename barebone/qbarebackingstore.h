@@ -12,14 +12,14 @@ class QBareBackingStore : public QPlatformBackingStore
 {
 public:
 	QBareBackingStore(QWindow *window, QBareIntegration* integration);
-	~QBareBackingStore();
+	virtual ~QBareBackingStore();
 
 	// QPlatformBackingStore
 	QPaintDevice *paintDevice();
 	void flush(QWindow *window, const QRegion &region, const QPoint &offset);
 	void resize(const QSize &size, const QRegion &staticContents);
 
-private:
+//private:
 	QBareIntegration* m_integration;
 	QImage mImage;
 };

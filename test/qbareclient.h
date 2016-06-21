@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QImage>
 #include "qbareclientinterface.h"
+#include "qbarescreen.h"
 
 #include <kms++/kms++.h>
 
@@ -22,9 +23,6 @@ public:
 	virtual void test();
 	virtual void flush();
 
-	virtual QPaintDevice *paintDevice();
-	virtual void resize(const QSize &size, const QRegion &staticContents);
-
 signals:
 
 public slots:
@@ -36,6 +34,8 @@ private:
 
 	QEvdevKeyboardManager* m_keyManager;
 	QEvdevMouseManager* m_mouseManager;
+
+	QBareScreenInterface* m_screen;
 
 	kms::DumbFramebuffer* m_fb;
 

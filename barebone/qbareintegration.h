@@ -3,6 +3,7 @@
 #include <qpa/qplatformintegration.h>
 #include "qbarenativeinterface.h"
 #include "qbareinterface.h"
+#include "qbarescreen.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -29,7 +30,7 @@ public:
 	QPlatformNativeInterface *nativeInterface() const;
 	QPlatformServices *services() const;
 
-	virtual void add_screen(QSize size);
+	virtual QBareScreen* add_screen(QSize size);
 	virtual void test();
 	virtual void install_client(QBareClientInterface *client);
 

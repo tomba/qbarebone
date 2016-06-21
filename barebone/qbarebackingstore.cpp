@@ -5,6 +5,8 @@
 #include <qpa/qplatformscreen.h>
 #include <private/qguiapplication_p.h>
 #include "qbareclientinterface.h"
+#include "qbarewindow.h"
+#include <QPainter>
 
 #include <cstdio>
 
@@ -19,6 +21,7 @@ QBareBackingStore::QBareBackingStore(QWindow *window, QBareIntegration* integrat
 
 QBareBackingStore::~QBareBackingStore()
 {
+	printf("~QBareBackingStore\n");
 }
 
 QPaintDevice *QBareBackingStore::paintDevice()
@@ -26,10 +29,12 @@ QPaintDevice *QBareBackingStore::paintDevice()
 	//printf("QBareBackingStore::paintDevice\n");
 
 
-	QPaintDevice *p = m_integration->client()->paintDevice();
-	return p;
+	//QBareWindow *wnd = (QBareWindow*)window()->handle();
+	//QBareScreen *scr = (QBareScreen*)wnd->screen();
 
-	//return &mImage;
+	//return scr->m_backbuffer;
+
+	return &mImage;
 }
 
 void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoint &offset)
@@ -49,7 +54,14 @@ void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoi
 		mImage.save(filename);
 	}
 
-	m_integration->client()->flush();
+	//m_integration->client()->flush();
+
+	QBareWindow *wnd = (QBareWindow*)this->window()->handle();
+	QBareScreen *scr = (QBareScreen*)wnd->screen();
+
+	wnd->m_store = this;
+
+	scr->present();
 }
 
 void QBareBackingStore::resize(const QSize &size, const QRegion &staticContents)
@@ -57,12 +69,12 @@ void QBareBackingStore::resize(const QSize &size, const QRegion &staticContents)
 	printf("QBareBackingStore::resize(%dx%d)\n", size.width(), size.height());
 
 	//QImage::Format format = QGuiApplication::primaryScreen()->handle()->format();
-	//if (mImage.size() != size)
-	//	mImage = QImage(size, format);
 
-	//mImage = m_integration->client()->get_qimage(size);
+	QBareWindow *wnd = (QBareWindow*)window()->handle();
+	QBareScreen *scr = (QBareScreen*)wnd->screen();
 
-	m_integration->client()->resize(size, staticContents);
+	if (mImage.size() != size)
+		mImage = QImage(size, scr->format());
 }
 
 QT_END_NAMESPACE

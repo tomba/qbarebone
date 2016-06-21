@@ -9,8 +9,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	move(0, 0);
-
 	QPropertyAnimation* animation = new QPropertyAnimation(ui->pushButton, "geometry");
 	animation->setDuration(2000);
 	animation->setStartValue(QRect(0, 0, 100, 30));

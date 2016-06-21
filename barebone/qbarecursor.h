@@ -3,12 +3,14 @@
 
 #include <qpa/qplatformcursor.h>
 
+class QBareScreen;
+
 QT_BEGIN_NAMESPACE
 
 class QBareCursor : public QPlatformCursor
 {
 public:
-	QBareCursor(QPlatformScreen *screen);
+	QBareCursor(QBareScreen *screen);
 #ifndef QT_NO_CURSOR
 	void changeCursor(QCursor *cursor, QWindow *window);
 #endif
@@ -17,11 +19,11 @@ public:
 
 	virtual void setPos(const QPoint &pos);
 
-private:
+//private:
 #ifndef QT_NO_CURSOR
 	QScopedPointer<QPlatformCursorImage> m_image;
 #endif
-	QPlatformScreen *m_screen;
+	QBareScreen *m_screen;
 };
 
 QT_END_NAMESPACE

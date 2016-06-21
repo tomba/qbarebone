@@ -1,11 +1,11 @@
 #include "qbarecursor.h"
 #include <QtCore/QCoreApplication>
 #include <QWindow>
-#include "qbarewindow.h"
+#include "qbarescreen.h"
 
 QT_BEGIN_NAMESPACE
 
-QBareCursor::QBareCursor(QPlatformScreen *screen)
+QBareCursor::QBareCursor(QBareScreen *screen)
     : m_screen(screen)
 {
 #ifndef QT_NO_CURSOR
@@ -54,11 +54,9 @@ void QBareCursor::changeCursor(QCursor *cursor, QWindow *)
 
 void QBareCursor::pointerEvent(const QMouseEvent& event)
 {
-	printf("PointerEvent\n");
-	QWindow* wnd = m_screen->topLevelAt(event.pos());
-	QBareWindow* pwnd = (QBareWindow*)wnd->handle();
-	pwnd->invalidateSurface();
-	pwnd->requestUpdate();
+	printf("PointerEvent %d, %d\n", event.globalPos().x(), event.globalPos().y());
+
+	m_screen->present();
 }
 
 void QBareCursor::setPos(const QPoint& pos)
