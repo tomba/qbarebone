@@ -31,4 +31,14 @@ void QBareWindow::setVisible(bool visible)
 
 }
 
+void QBareWindow::invalidateSurface()
+{
+	printf("wnd: invalidate\n");
+}
+
+void QBareWindow::requestUpdate()
+{
+	printf("wnd: requestUpdate\n");
+}
+
 QT_END_NAMESPACE

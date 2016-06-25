@@ -26,7 +26,7 @@ QBareBackingStore::~QBareBackingStore()
 
 QPaintDevice *QBareBackingStore::paintDevice()
 {
-	//printf("QBareBackingStore::paintDevice\n");
+	printf("QBareBackingStore::paintDevice\n");
 
 
 	//QBareWindow *wnd = (QBareWindow*)window()->handle();
@@ -61,7 +61,7 @@ void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoi
 
 	wnd->m_store = this;
 
-	scr->present();
+	scr->scheduleUpdate();
 }
 
 void QBareBackingStore::resize(const QSize &size, const QRegion &staticContents)
@@ -75,6 +75,16 @@ void QBareBackingStore::resize(const QSize &size, const QRegion &staticContents)
 
 	if (mImage.size() != size)
 		mImage = QImage(size, scr->format());
+}
+
+void QBareBackingStore::beginPaint(const QRegion&)
+{
+	printf("begin paint\n");
+}
+
+void QBareBackingStore::endPaint()
+{
+	printf("end paint\n");
 }
 
 QT_END_NAMESPACE

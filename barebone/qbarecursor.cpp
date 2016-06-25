@@ -56,7 +56,7 @@ void QBareCursor::pointerEvent(const QMouseEvent& event)
 {
 	printf("PointerEvent %d, %d\n", event.globalPos().x(), event.globalPos().y());
 
-	m_screen->present();
+	m_screen->scheduleUpdate();
 }
 
 void QBareCursor::setPos(const QPoint& pos)

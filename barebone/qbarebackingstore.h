@@ -18,6 +18,8 @@ public:
 	QPaintDevice *paintDevice();
 	void flush(QWindow *window, const QRegion &region, const QPoint &offset);
 	void resize(const QSize &size, const QRegion &staticContents);
+	virtual void beginPaint(const QRegion &);
+	virtual void endPaint();
 
 //private:
 	QBareIntegration* m_integration;

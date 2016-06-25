@@ -67,7 +67,8 @@ void QBareIntegration::test()
 
 QBareScreen* QBareIntegration::add_screen(QSize size)
 {
-	QBareScreen *screen = new QBareScreen(QRect(0, 0, size.width(), size.height()), 32, QImage::Format_ARGB32_Premultiplied,
+	QBareScreen *screen = new QBareScreen(QRect(0, 0, size.width(), size.height()), 32, 
+					      QImage::Format_ARGB32_Premultiplied,
 					      (QBareIntegration*)this);
 	screenAdded(screen);
 	return screen;
@@ -83,7 +84,7 @@ bool QBareIntegration::hasCapability(QPlatformIntegration::Capability cap) const
 {
 	switch (cap) {
 	case ThreadedPixmaps: return true;
-	case MultipleWindows: return true;
+	case MultipleWindows: return false;
 	case NonFullScreenWindows: return true;
 	case WindowManagement: return false;
 	case OpenGL: return false;

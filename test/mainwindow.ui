@@ -53,8 +53,17 @@
     </property>
     <addaction name="actionMenutus"/>
     <addaction name="actionKalatus"/>
+    <addaction name="actionKulutus"/>
+   </widget>
+   <widget class="QMenu" name="menuBarri">
+    <property name="title">
+     <string>Barri</string>
+    </property>
+    <addaction name="actionBorri"/>
+    <addaction name="actionBurri"/>
    </widget>
    <addaction name="menuTitteli"/>
+   <addaction name="menuBarri"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -73,6 +82,21 @@
   <action name="actionKalatus">
    <property name="text">
     <string>kalatus</string>
+   </property>
+  </action>
+  <action name="actionBorri">
+   <property name="text">
+    <string>Borri</string>
+   </property>
+  </action>
+  <action name="actionBurri">
+   <property name="text">
+    <string>Burri</string>
+   </property>
+  </action>
+  <action name="actionKulutus">
+   <property name="text">
+    <string>Kulutus</string>
    </property>
   </action>
  </widget>

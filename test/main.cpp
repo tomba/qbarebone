@@ -14,8 +14,8 @@
 
 int main(int argc, char *argv[])
 {
-	int tty = open("/dev/tty1", O_RDWR);
-	ioctl(tty, KDSETMODE, KD_GRAPHICS);
+	//int tty = open("/dev/tty1", O_RDWR);
+	//ioctl(tty, KDSETMODE, KD_GRAPHICS);
 
 
 	printf("Create App\n");

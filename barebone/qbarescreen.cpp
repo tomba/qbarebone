@@ -27,16 +27,28 @@ QPlatformCursor* QBareScreen::cursor() const
 	return m_cursor;
 }
 
-void QBareScreen::setBackbuffer(QImage* qimage)
+void QBareScreen::scheduleUpdate()
 {
-	printf("set backbuffer %p\n", qimage);
-	m_backbuffer = qimage;
+	if (!mUpdatePending) {
+		mUpdatePending = true;
+		QCoreApplication::postEvent(this, new QEvent(QEvent::UpdateRequest));
+	}
 }
 
-void QBareScreen::present()
+bool QBareScreen::event(QEvent *event)
+{
+	if (event->type() == QEvent::UpdateRequest) {
+		m_integration->client()->flush();
+		mUpdatePending = false;
+		return true;
+	}
+	return QObject::event(event);
+}
+
+void QBareScreen::draw(QImage& qimage)
 {
 	QPainter p;
-	p.begin(m_backbuffer);
+	p.begin(&qimage);
 
 	for (int i = 0; i < mWindowStack.length(); ++i) {
 		QBareWindow* wnd = mWindowStack[i];
@@ -52,8 +64,6 @@ void QBareScreen::present()
 	p.drawImage(pos, *m_cursor->m_image->image());
 
 	p.end();
-
-	m_integration->client()->flush();
 }
 
 void QBareScreen::addWindow(QBareWindow* wnd)

@@ -3,17 +3,17 @@
 
 #include <QObject>
 #include <QImage>
+#include <QSocketNotifier>
 #include "qbareclientinterface.h"
 #include "qbarescreen.h"
 
 #include <kms++/kms++.h>
+#include <vector>
 
 struct QEvdevKeyboardManager;
 struct QEvdevMouseManager;
 
-class QFbVtHandler;
-
-class QBareClient : public QObject, public QBareClientInterface
+class QBareClient : public QObject, public QBareClientInterface, public kms::PageFlipHandlerBase
 {
 	Q_OBJECT
 public:
@@ -23,9 +23,12 @@ public:
 	virtual void test();
 	virtual void flush();
 
+	virtual void handle_page_flip(uint32_t frame, double time);
+
 signals:
 
 public slots:
+	void drmEvent();
 
 private:
 	kms::Card* m_card;
@@ -37,11 +40,14 @@ private:
 
 	QBareScreenInterface* m_screen;
 
-	kms::DumbFramebuffer* m_fb;
+	std::vector<kms::DumbFramebuffer*> m_free_fbs;
+	std::vector<kms::DumbFramebuffer*> m_ready_fbs;
+	kms::DumbFramebuffer* m_queued_fb = 0;
+	kms::DumbFramebuffer* m_display_fb = 0;
 
-	QImage m_image;
+	QSocketNotifier* m_sockNotifier;
 
-	unsigned m_cur_fb = 0;
+	bool m_pending_draw = false;
 };
 
 #endif // QBARECLIENT_H

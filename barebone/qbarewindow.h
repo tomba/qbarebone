@@ -12,5 +12,8 @@ public:
 
 	virtual void setVisible(bool visible);
 
+	virtual void invalidateSurface();
+	virtual void requestUpdate();
+
 	QBareBackingStore* m_store;
 };
