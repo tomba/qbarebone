@@ -35,7 +35,6 @@ QBareIntegration::~QBareIntegration()
 
 void QBareIntegration::initialize()
 {
-	printf("INIT\n");
 	m_inputContext = QPlatformInputContextFactory::create();
 
 	//createInputHandlers();

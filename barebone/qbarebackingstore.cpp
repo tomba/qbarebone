@@ -37,7 +37,7 @@ void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoi
 	QBareWindow *wnd = (QBareWindow*)this->window()->handle();
 	QBareScreen *scr = (QBareScreen*)wnd->screen();
 
-	wnd->m_store = this;
+	wnd->set_backing_store(this);
 
 	scr->scheduleUpdate();
 }

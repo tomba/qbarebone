@@ -23,10 +23,8 @@ int main(int argc, char *argv[])
 
 	QBareClient* bb = nullptr;
 
-	if (a.platformName() == "barebone") {
-		printf("Create BB\n");
+	if (a.platformName() == "barebone")
 		bb = new QBareClient(a);
-	}
 
 #if 1
 	auto screens = a.screens();

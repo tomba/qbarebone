@@ -12,7 +12,7 @@
 #include <cstdio>
 
 QBareScreen::QBareScreen(const QRect &geom, int depth, QImage::Format format, QBareIntegration* integration)
-	: mGeometry(geom), mDepth(depth), mFormat(format), m_integration(integration)
+	: m_geometry(geom), m_depth(depth), m_format(format), m_integration(integration)
 {
 	printf("QBareScreen(%dx%d)\n", geom.width(), geom.height());
 
@@ -26,8 +26,8 @@ QPlatformCursor* QBareScreen::cursor() const
 
 void QBareScreen::scheduleUpdate()
 {
-	if (!mUpdatePending) {
-		mUpdatePending = true;
+	if (!m_updatePending) {
+		m_updatePending = true;
 		QCoreApplication::postEvent(this, new QEvent(QEvent::UpdateRequest));
 	}
 }
@@ -36,7 +36,7 @@ bool QBareScreen::event(QEvent *event)
 {
 	if (event->type() == QEvent::UpdateRequest) {
 		m_integration->client()->flush();
-		mUpdatePending = false;
+		m_updatePending = false;
 		return true;
 	}
 	return QObject::event(event);
@@ -47,10 +47,10 @@ void QBareScreen::draw(QImage& qimage)
 	QPainter p;
 	p.begin(&qimage);
 
-	for (int i = 0; i < mWindowStack.length(); ++i) {
-		QBareWindow* wnd = mWindowStack[i];
+	for (int i = 0; i < m_windowStack.length(); ++i) {
+		QBareWindow* wnd = m_windowStack[i];
 
-		QBareBackingStore* store = wnd->m_store;
+		QBareBackingStore* store = wnd->store();
 
 		const QImage& img = store->get_image();
 
@@ -66,10 +66,10 @@ void QBareScreen::draw(QImage& qimage)
 
 void QBareScreen::addWindow(QBareWindow* wnd)
 {
-	mWindowStack.append(wnd);
+	m_windowStack.append(wnd);
 }
 
 void QBareScreen::removeWindow(QBareWindow* wnd)
 {
-	mWindowStack.removeOne(wnd);
+	m_windowStack.removeOne(wnd);
 }

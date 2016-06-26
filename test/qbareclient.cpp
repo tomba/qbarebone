@@ -21,6 +21,8 @@ using namespace kms;
 
 QBareClient::QBareClient(QApplication& a)
 {
+	printf("QBareClient()\n");
+
 	ASSERT(a.platformName() == "barebone");
 
 	QPlatformNativeInterface* native = a.platformNativeInterface();
