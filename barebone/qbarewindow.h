@@ -15,7 +15,7 @@ public:
 	virtual void invalidateSurface();
 	virtual void requestUpdate();
 
-	void set_backing_store(QBareBackingStore* store) { m_store = store; }
+	void set_store(QBareBackingStore* store) { m_store = store; }
 	QBareBackingStore* store() const { return m_store; }
 
 private:

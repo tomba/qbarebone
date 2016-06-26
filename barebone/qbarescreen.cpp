@@ -52,7 +52,7 @@ void QBareScreen::draw(QImage& qimage)
 
 		QBareBackingStore* store = wnd->store();
 
-		const QImage& img = store->get_image();
+		const QImage& img = store->image();
 
 		p.drawImage(wnd->window()->x(), wnd->window()->y(), img);
 	}

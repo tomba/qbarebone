@@ -19,7 +19,7 @@ public:
 	void beginPaint(const QRegion &);
 	void endPaint();
 
-	const QImage& get_image() const { return m_image; }
+	const QImage& image() const { return m_image; }
 
 private:
 	QBareIntegration* m_integration;
