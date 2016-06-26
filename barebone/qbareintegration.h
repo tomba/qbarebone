@@ -30,8 +30,7 @@ public:
 	QPlatformNativeInterface *nativeInterface() const;
 	QPlatformServices *services() const;
 
-	virtual QBareScreen* add_screen(QSize size);
-	virtual void test();
+	virtual QBareScreenInterface* add_screen(QSize size);
 	virtual void install_client(QBareClientInterface *client);
 
 	QBareClientInterface* client() const { return m_clientInterface; }

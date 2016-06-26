@@ -4,11 +4,11 @@
 #include <QObject>
 #include <QImage>
 #include <QSocketNotifier>
-#include "qbareclientinterface.h"
-#include "qbarescreen.h"
 
 #include <kms++/kms++.h>
 #include <vector>
+
+#include "qbareinterface.h"
 
 struct QEvdevKeyboardManager;
 struct QEvdevMouseManager;
@@ -19,10 +19,10 @@ class QBareClient : public QObject, public QBareClientInterface, public kms::Pag
 public:
 	QBareClient(QApplication& a);
 
-	// QBareClient
-	virtual void test();
+	// QBareClientInterface
 	virtual void flush();
 
+	// PageFlipHandlerBase
 	virtual void handle_page_flip(uint32_t frame, double time);
 
 signals:

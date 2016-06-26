@@ -38,9 +38,9 @@ int main(int argc, char *argv[])
 		w->move(50, 0);
 		w->show();
 
-		MainWindow *w2 = new MainWindow();
-		w2->move(300, 50);
-		w2->show();
+		//MainWindow *w2 = new MainWindow();
+		//w2->move(300, 50);
+		//w2->show();
 	}
 #endif
 #if 0

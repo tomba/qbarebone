@@ -1,6 +1,4 @@
-QT       += core gui platformsupport-private
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT += core gui platformsupport-private widgets
 
 CONFIG += c++11
 

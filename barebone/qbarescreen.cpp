@@ -7,7 +7,6 @@
 #include <qpa/qplatformwindow.h>
 #include <qpa/qplatformfontdatabase.h>
 #include <qpa/qplatformcursor.h>
-#include "qbareclientinterface.h"
 #include "qbarewindow.h"
 
 #include <cstdio>

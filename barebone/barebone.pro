@@ -26,7 +26,6 @@ HEADERS += qbareintegration.h qbarebackingstore.h qbarescreen.h \
     qbarewindow.h \
     qbarenativeinterface.h \
     qbareinterface.h \
-    qbareclientinterface.h \
     qbarecursor.h
 
 OTHER_FILES += barebone.json

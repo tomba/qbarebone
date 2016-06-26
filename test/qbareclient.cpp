@@ -2,15 +2,14 @@
 #include <QApplication>
 #include <QPluginLoader>
 #include <QScreen>
-#include <qpa/qplatformnativeinterface.h>
-#include <QtPlatformSupport/private/qevdevmousemanager_p.h>
-#include <QtPlatformSupport/private/qevdevkeyboardmanager_p.h>
-#include <QtPlatformSupport/private/qevdevtouchmanager_p.h>
-#include <qpa/qwindowsysteminterface.h>
 #include <QPainter>
 
 #include "qbareinterface.h"
-#include "qbareclientinterface.h"
+
+#include <qpa/qplatformnativeinterface.h>
+#include <QtPlatformSupport/private/qevdevmousemanager_p.h>
+//#include <QtPlatformSupport/private/qevdevkeyboardmanager_p.h>
+//#include <QtPlatformSupport/private/qevdevtouchmanager_p.h>
 
 #include <assert.h>
 #include <cstdio>
@@ -21,6 +20,8 @@ using namespace kms;
 
 QBareClient::QBareClient(QApplication& a)
 {
+	ASSERT(a.platformName() == "barebone");
+
 	QPlatformNativeInterface* native = a.platformNativeInterface();
 	ASSERT(native);
 	QBareInterface* bare = (QBareInterface*)native->nativeResourceForIntegration("main");
@@ -94,11 +95,6 @@ QBareClient::QBareClient(QApplication& a)
 	m_sockNotifier = new QSocketNotifier(m_card->fd(), QSocketNotifier::Read);
 	connect(m_sockNotifier, &QSocketNotifier::activated, this, &QBareClient::drmEvent);
 	m_sockNotifier->setEnabled(true);
-}
-
-void QBareClient::test()
-{
-	printf("CLIENT TTEST\n");
 }
 
 void QBareClient::drmEvent()

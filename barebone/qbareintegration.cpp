@@ -2,7 +2,6 @@
 #include "qbarebackingstore.h"
 #include "qbarescreen.h"
 #include "qbarewindow.h"
-#include "qbareclientinterface.h"
 
 #include <QtGui/private/qpixmap_raster_p.h>
 #include <QtGui/private/qguiapplication_p.h>
@@ -59,13 +58,7 @@ void QBareIntegration::createInputHandlers()
 #endif
 }
 
-void QBareIntegration::test()
-{
-	printf("TESTI\n");
-	m_clientInterface->test();
-}
-
-QBareScreen* QBareIntegration::add_screen(QSize size)
+QBareScreenInterface* QBareIntegration::add_screen(QSize size)
 {
 	QBareScreen *screen = new QBareScreen(QRect(0, 0, size.width(), size.height()), 32, 
 					      QImage::Format_ARGB32_Premultiplied,

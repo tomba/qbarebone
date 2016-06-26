@@ -2,17 +2,12 @@
 
 #include <qpa/qplatformscreen.h>
 #include "qbarecursor.h"
+#include "qbareinterface.h"
 
 QT_BEGIN_NAMESPACE
 
 class QBareIntegration;
 class QBareWindow;
-
-class QBareScreenInterface
-{
-public:
-	virtual void draw(QImage& qimage) = 0;
-};
 
 class QBareScreen : public QObject, public QPlatformScreen, public QBareScreenInterface
 {

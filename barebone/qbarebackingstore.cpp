@@ -4,7 +4,6 @@
 #include <QtCore/qdebug.h>
 #include <qpa/qplatformscreen.h>
 #include <private/qguiapplication_p.h>
-#include "qbareclientinterface.h"
 #include "qbarewindow.h"
 #include <QPainter>
 
