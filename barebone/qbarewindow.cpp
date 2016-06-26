@@ -36,3 +36,15 @@ void QBareWindow::requestUpdate()
 {
 	printf("wnd: requestUpdate\n");
 }
+
+void QBareWindow::raise()
+{
+	QBareScreen* scr = (QBareScreen*)screen();
+	scr->raise(this);
+}
+
+void QBareWindow::lower()
+{
+	QBareScreen* scr = (QBareScreen*)screen();
+	scr->lower(this);
+}

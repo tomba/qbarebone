@@ -32,6 +32,22 @@ void QBareScreen::scheduleUpdate()
 	}
 }
 
+void QBareScreen::raise(QBareWindow* wnd)
+{
+	int index = m_windowStack.indexOf(wnd);
+	if (index <= 0)
+		return;
+	m_windowStack.move(index, 0);
+}
+
+void QBareScreen::lower(QBareWindow* wnd)
+{
+	int index = m_windowStack.indexOf(wnd);
+	if (index == -1 || index == (m_windowStack.size() - 1))
+		return;
+	m_windowStack.move(index, m_windowStack.size() - 1);
+}
+
 bool QBareScreen::event(QEvent *event)
 {
 	if (event->type() == QEvent::UpdateRequest) {

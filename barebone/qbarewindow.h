@@ -11,9 +11,13 @@ public:
 	virtual ~QBareWindow();
 
 	// QPlatformWindow
-	virtual void setVisible(bool visible);
-	virtual void invalidateSurface();
-	virtual void requestUpdate();
+	void setVisible(bool visible);
+	void invalidateSurface();
+	void requestUpdate();
+	bool setKeyboardGrabEnabled(bool) { return false; }
+	bool setMouseGrabEnabled(bool) { return false; }
+	void raise();
+	void lower();
 
 	void set_store(QBareBackingStore* store) { m_store = store; }
 	QBareBackingStore* store() const { return m_store; }

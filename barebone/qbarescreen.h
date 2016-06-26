@@ -22,7 +22,7 @@ public:
 	QPlatformCursor *cursor() const;
 
 	// QBareScreenInterface
-	virtual void draw(QImage& qimage);
+	void draw(QImage& qimage);
 
 	void present();
 
@@ -30,6 +30,9 @@ public:
 	void removeWindow(QBareWindow* wnd);
 
 	void scheduleUpdate();
+
+	void raise(QBareWindow* wnd);
+	void lower(QBareWindow* wnd);
 
 protected:
 	bool event(QEvent *event) Q_DECL_OVERRIDE;
