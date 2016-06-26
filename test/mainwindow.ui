@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>222</width>
-    <height>333</height>
+    <width>380</width>
+    <height>407</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>40</y>
+      <x>0</x>
+      <y>10</y>
       <width>99</width>
       <height>27</height>
      </rect>
@@ -30,10 +30,20 @@
    <widget class="QLCDNumber" name="lcdNumber">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>100</y>
+      <x>110</x>
+      <y>0</y>
       <width>81</width>
       <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QListView" name="listView">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>50</y>
+      <width>256</width>
+      <height>192</height>
      </rect>
     </property>
    </widget>
@@ -43,21 +53,21 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>222</width>
+     <width>380</width>
      <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuTitteli">
     <property name="title">
-     <string>Foobar</string>
+     <string>Foo</string>
     </property>
-    <addaction name="actionMenutus"/>
+    <addaction name="actionQuit"/>
     <addaction name="actionKalatus"/>
     <addaction name="actionKulutus"/>
    </widget>
    <widget class="QMenu" name="menuBarri">
     <property name="title">
-     <string>Barri</string>
+     <string>Bar</string>
     </property>
     <addaction name="actionBorri"/>
     <addaction name="actionBurri"/>
@@ -65,38 +75,48 @@
    <addaction name="menuTitteli"/>
    <addaction name="menuBarri"/>
   </widget>
-  <widget class="QToolBar" name="mainToolBar">
+  <widget class="QStatusBar" name="statusBar">
+   <property name="sizeGripEnabled">
+    <bool>false</bool>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionQuit"/>
+   <addaction name="actionKalatus"/>
+   <addaction name="actionBorri"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionMenutus">
+  <action name="actionQuit">
    <property name="text">
-    <string>Menutus</string>
+    <string>Quit</string>
    </property>
   </action>
   <action name="actionKalatus">
    <property name="text">
-    <string>kalatus</string>
+    <string>Menu2</string>
    </property>
   </action>
   <action name="actionBorri">
    <property name="text">
-    <string>Borri</string>
+    <string>Bar1</string>
    </property>
   </action>
   <action name="actionBurri">
    <property name="text">
-    <string>Burri</string>
+    <string>Bar2</string>
    </property>
   </action>
   <action name="actionKulutus">
    <property name="text">
-    <string>Kulutus</string>
+    <string>Menu3</string>
    </property>
   </action>
  </widget>

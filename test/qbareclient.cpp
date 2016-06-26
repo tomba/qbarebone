@@ -12,6 +12,7 @@
 #include <QtPlatformSupport/private/qevdevkeyboardmanager_p.h>
 #include <QtPlatformSupport/private/qevdevtouchmanager_p.h>
 #include <QtPlatformSupport/private/qlibinputhandler_p.h>
+#include <QtPlatformSupport/private/qfbvthandler_p.h>
 
 #include <assert.h>
 #include <cstdio>
@@ -31,9 +32,9 @@ QBareClient::QBareClient(QApplication& a)
 	QBareInterface* bare = (QBareInterface*)native->nativeResourceForIntegration("main");
 	ASSERT(bare);
 
-
 	bare->install_client(this);
 
+	new QFbVtHandler(this);
 
 	m_card = new Card();
 

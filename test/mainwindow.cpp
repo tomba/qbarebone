@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include <QPropertyAnimation>
 #include <QMouseEvent>
+#include <QStringListModel>
+#include <QLabel>
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
@@ -9,16 +11,23 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	QPropertyAnimation* animation = new QPropertyAnimation(ui->pushButton, "geometry");
-	animation->setDuration(2000);
-	animation->setStartValue(QRect(0, 0, 100, 30));
-	animation->setEndValue(QRect(50, 50, 100, 30));
-	animation->setLoopCount(10000);
+	QStringList list;
+	list.append("item1");
+	list.append("item2");
+	list.append("item3");
+	list.append("item4");
+	list.append("item5");
+	list.append("item6");
+	list.append("item7");
 
-	//animation->start();
+	QStringListModel* model = new QStringListModel(list, this);
+	ui->listView->setModel(model);
 
-	//setMouseTracking(true);
-	//qApp->installEventFilter(this);
+	QLabel *label = new QLabel("Message");
+	statusBar()->addWidget(label);
+
+
+	connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::on_quit);
 }
 
 MainWindow::~MainWindow()
@@ -26,19 +35,14 @@ MainWindow::~MainWindow()
 	delete ui;
 }
 
+void MainWindow::on_quit()
+{
+	QApplication::quit();
+
+}
+
 
 void MainWindow::on_pushButton_clicked()
 {
 	ui->lcdNumber->display(ui->lcdNumber->intValue() + 1);
-}
-
-bool MainWindow::eventFilter(QObject *obj, QEvent *event)
-{
-	if (event->type() == QEvent::MouseMove)
-	{
-		QMouseEvent *mouseEvent = static_cast<QMouseEvent*>(event);
-		printf("Mouse move %d,%d\n", mouseEvent->pos().x(), mouseEvent->pos().y());
-	}
-
-	return false;
 }

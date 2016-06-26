@@ -16,20 +16,16 @@ int run_moveblocks(QApplication& app);
 
 int main(int argc, char *argv[])
 {
-	//int tty = open("/dev/tty1", O_RDWR);
-	//ioctl(tty, KDSETMODE, KD_GRAPHICS);
-
-
 	printf("Create App\n");
-	QApplication a(argc, argv);
+	QApplication app(argc, argv);
 
 	QBareClient* bb = nullptr;
 
-	if (a.platformName() == "barebone")
-		bb = new QBareClient(a);
+	if (app.platformName() == "barebone")
+		bb = new QBareClient(app);
 
 #if 1
-	auto screens = a.screens();
+	auto screens = app.screens();
 
 	for (int i = 0; i < screens.size(); ++i) {
 		//qDebug() << QString("Create window on screen %1").arg(screens.at(i)->name());
@@ -63,7 +59,7 @@ int main(int argc, char *argv[])
 	}
 #endif
 	printf("Enter mainloop\n");
-	a.exec();
+	app.exec();
 
 	//run_moveblocks(a);
 
