@@ -4,8 +4,6 @@
 
 #include <cstdio>
 
-QT_BEGIN_NAMESPACE
-
 class QMinimalIntegrationPlugin : public QPlatformIntegrationPlugin
 {
 	Q_OBJECT
@@ -21,7 +19,5 @@ QPlatformIntegration *QMinimalIntegrationPlugin::create(const QString& system, c
 
 	return 0;
 }
-
-QT_END_NAMESPACE
 
 #include "main.moc"

@@ -3,8 +3,6 @@
 
 #include <cstdio>
 
-QT_BEGIN_NAMESPACE
-
 QBareWindow::QBareWindow(QWindow *window)
 	:QPlatformWindow(window)
 {
@@ -40,5 +38,3 @@ void QBareWindow::requestUpdate()
 {
 	printf("wnd: requestUpdate\n");
 }
-
-QT_END_NAMESPACE

@@ -5,8 +5,6 @@
 #include "qbareinterface.h"
 #include "qbarescreen.h"
 
-QT_BEGIN_NAMESPACE
-
 class QEvdevKeyboardManager;
 class QEvdevMouseManager;
 
@@ -44,5 +42,3 @@ private:
 	QEvdevMouseManager *m_mouseMgr;
 	QScopedPointer<QPlatformFontDatabase> m_fontDatabase;
 };
-
-QT_END_NAMESPACE

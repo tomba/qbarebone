@@ -11,8 +11,6 @@
 
 #include <cstdio>
 
-QT_BEGIN_NAMESPACE
-
 QBareScreen::QBareScreen(const QRect &geom, int depth, QImage::Format format, QBareIntegration* integration)
 	: mGeometry(geom), mDepth(depth), mFormat(format), m_integration(integration)
 {
@@ -74,5 +72,3 @@ void QBareScreen::removeWindow(QBareWindow* wnd)
 {
 	mWindowStack.removeOne(wnd);
 }
-
-QT_END_NAMESPACE

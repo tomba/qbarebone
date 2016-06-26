@@ -3,6 +3,7 @@
 #include <QPluginLoader>
 #include <QScreen>
 #include <QPainter>
+#include <QImage>
 
 #include "qbareinterface.h"
 

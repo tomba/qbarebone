@@ -1,11 +1,8 @@
-#ifndef QBARECURSOR_H
-#define QBARECURSOR_H
+#pragma once
 
 #include <qpa/qplatformcursor.h>
 
 class QBareScreen;
-
-QT_BEGIN_NAMESPACE
 
 class QBareCursor : public QPlatformCursor
 {
@@ -25,7 +22,3 @@ public:
 #endif
 	QBareScreen *m_screen;
 };
-
-QT_END_NAMESPACE
-
-#endif // QBARECURSOR_H

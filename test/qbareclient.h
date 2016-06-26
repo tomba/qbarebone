@@ -1,9 +1,8 @@
-#ifndef QBARECLIENT_H
-#define QBARECLIENT_H
+#pragma once
 
 #include <QObject>
-#include <QImage>
 #include <QSocketNotifier>
+#include <QApplication>
 
 #include <kms++/kms++.h>
 #include <vector>
@@ -19,6 +18,7 @@ class QBareClient : public QObject, public QBareClientInterface, public kms::Pag
 public:
 	QBareClient(QApplication& a);
 
+private:
 	// QBareClientInterface
 	virtual void flush();
 
@@ -49,5 +49,3 @@ private:
 
 	bool m_pending_draw = false;
 };
-
-#endif // QBARECLIENT_H

@@ -4,8 +4,6 @@
 #include <qpa/qplatformwindow.h>
 #include <QtGui/QImage>
 
-QT_BEGIN_NAMESPACE
-
 class QBareIntegration;
 
 class QBareBackingStore : public QPlatformBackingStore
@@ -25,5 +23,3 @@ public:
 	QBareIntegration* m_integration;
 	QImage mImage;
 };
-
-QT_END_NAMESPACE

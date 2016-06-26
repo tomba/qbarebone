@@ -4,8 +4,6 @@
 #include "qbarecursor.h"
 #include "qbareinterface.h"
 
-QT_BEGIN_NAMESPACE
-
 class QBareIntegration;
 class QBareWindow;
 
@@ -46,5 +44,3 @@ public:
 	bool mUpdatePending;
 	void scheduleUpdate();
 };
-
-QT_END_NAMESPACE

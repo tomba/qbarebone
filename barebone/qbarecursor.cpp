@@ -3,17 +3,12 @@
 #include <QWindow>
 #include "qbarescreen.h"
 
-QT_BEGIN_NAMESPACE
-
 QBareCursor::QBareCursor(QBareScreen *screen)
     : m_screen(screen)
 {
-#ifndef QT_NO_CURSOR
     m_image.reset(new QPlatformCursorImage(0, 0, 0, 0, 0, 0));
-#endif
 }
 
-#ifndef QT_NO_CURSOR
 void QBareCursor::changeCursor(QCursor *cursor, QWindow *)
 {
     //int xSpot;
@@ -64,6 +59,3 @@ void QBareCursor::setPos(const QPoint& pos)
 	printf("setPos %u,%u\n", pos.x(), pos.y());
 	QPlatformCursor::setPos(pos);
 }
-#endif
-
-QT_END_NAMESPACE

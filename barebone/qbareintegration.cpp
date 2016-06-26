@@ -18,8 +18,6 @@
 
 #include <cstdio>
 
-QT_BEGIN_NAMESPACE
-
 QBareIntegration::QBareIntegration(const QStringList &parameters)
 {
 	Q_UNUSED(parameters);
@@ -124,5 +122,3 @@ QPlatformServices *QBareIntegration::services() const
 	//printf("GET SERVICE\n");
 	return 0;
 }
-
-QT_END_NAMESPACE

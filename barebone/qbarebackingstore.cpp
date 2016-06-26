@@ -9,8 +9,6 @@
 
 #include <cstdio>
 
-QT_BEGIN_NAMESPACE
-
 QBareBackingStore::QBareBackingStore(QWindow *window, QBareIntegration* integration)
 	: QPlatformBackingStore(window),
 	  m_integration(integration)
@@ -85,5 +83,3 @@ void QBareBackingStore::endPaint()
 {
 	printf("end paint\n");
 }
-
-QT_END_NAMESPACE
