@@ -43,22 +43,22 @@ void QBareIntegration::initialize()
 
 void QBareIntegration::createInputHandlers()
 {
-    //m_kbdMgr = new QEvdevKeyboardManager(QLatin1String("EvdevKeyboard"), QString() /* spec */);
-    //m_mouseMgr = new QEvdevMouseManager(QLatin1String("EvdevMouse"), QString() /* spec */);
+	//m_kbdMgr = new QEvdevKeyboardManager(QLatin1String("EvdevKeyboard"), QString() /* spec */);
+	//m_mouseMgr = new QEvdevMouseManager(QLatin1String("EvdevMouse"), QString() /* spec */);
 
 #if 0
-    Q_FOREACH (QScreen *screen, QGuiApplication::screens()) {
-	QEGLPlatformCursor *cursor = static_cast<QEGLPlatformCursor *>(screen->handle()->cursor());
-	if (cursor)
-	    cursor->setMouseDeviceDiscovery(mouseMgr->deviceDiscovery());
-    }
-    new QEvdevTouchScreenHandlerThread(QString() /* spec */, this);
+	Q_FOREACH (QScreen *screen, QGuiApplication::screens()) {
+		QEGLPlatformCursor *cursor = static_cast<QEGLPlatformCursor *>(screen->handle()->cursor());
+		if (cursor)
+			cursor->setMouseDeviceDiscovery(mouseMgr->deviceDiscovery());
+	}
+	new QEvdevTouchScreenHandlerThread(QString() /* spec */, this);
 #endif
 }
 
 QBareScreenInterface* QBareIntegration::add_screen(QSize size)
 {
-	QBareScreen *screen = new QBareScreen(QRect(0, 0, size.width(), size.height()), 32, 
+	QBareScreen *screen = new QBareScreen(QRect(0, 0, size.width(), size.height()), 32,
 					      QImage::Format_ARGB32_Premultiplied,
 					      (QBareIntegration*)this);
 	screenAdded(screen);

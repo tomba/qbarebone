@@ -16,10 +16,12 @@ public:
 	QPaintDevice *paintDevice();
 	void flush(QWindow *window, const QRegion &region, const QPoint &offset);
 	void resize(const QSize &size, const QRegion &staticContents);
-	virtual void beginPaint(const QRegion &);
-	virtual void endPaint();
+	void beginPaint(const QRegion &);
+	void endPaint();
 
-//private:
+	const QImage& get_image() const { return m_image; }
+
+private:
 	QBareIntegration* m_integration;
-	QImage mImage;
+	QImage m_image;
 };

@@ -8,17 +8,18 @@ class QBareCursor : public QPlatformCursor
 {
 public:
 	QBareCursor(QBareScreen *screen);
-#ifndef QT_NO_CURSOR
+
+	// QPlatformCursor
 	void changeCursor(QCursor *cursor, QWindow *window);
-#endif
+	void pointerEvent(const QMouseEvent & event);
+	void setPos(const QPoint &pos);
 
-	virtual void pointerEvent(const QMouseEvent & event);
+	const QPixmap& pixmap() const { return m_pixmap; }
+	QPoint hotspot() const { return m_hotspot; }
 
-	virtual void setPos(const QPoint &pos);
-
-//private:
-#ifndef QT_NO_CURSOR
-	QScopedPointer<QPlatformCursorImage> m_image;
-#endif
+private:
+	QScopedPointer<QPlatformCursorImage> m_cursor_image;
 	QBareScreen *m_screen;
+	QPixmap m_pixmap;
+	QPoint m_hotspot;
 };

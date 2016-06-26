@@ -27,11 +27,12 @@ public:
 
 	virtual void draw(QImage& qimage);
 
+	void scheduleUpdate();
+
 protected:
 	bool event(QEvent *event) Q_DECL_OVERRIDE;
 
-public:
-//private:
+private:
 	QRect mGeometry;
 	int mDepth;
 	QImage::Format mFormat;
@@ -42,5 +43,4 @@ public:
 	QList<QBareWindow*> mWindowStack;
 
 	bool mUpdatePending;
-	void scheduleUpdate();
 };

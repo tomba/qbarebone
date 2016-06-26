@@ -52,13 +52,14 @@ void QBareScreen::draw(QImage& qimage)
 
 		QBareBackingStore* store = wnd->m_store;
 
-		QImage& img = store->mImage;
+		const QImage& img = store->get_image();
 
 		p.drawImage(wnd->window()->x(), wnd->window()->y(), img);
 	}
 
 	QPoint pos = m_cursor->pos();
-	p.drawImage(pos, *m_cursor->m_image->image());
+	pos -= m_cursor->hotspot();
+	p.drawPixmap(pos, m_cursor->pixmap());
 
 	p.end();
 }
