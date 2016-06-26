@@ -27,7 +27,7 @@ void QBareCursor::changeCursor(QCursor *cursor, QWindow *window)
 
 void QBareCursor::pointerEvent(const QMouseEvent& event)
 {
-	printf("PointerEvent %d, %d\n", event.globalPos().x(), event.globalPos().y());
+	//printf("PointerEvent %d, %d\n", event.globalPos().x(), event.globalPos().y());
 	m_screen->scheduleUpdate();
 }
 

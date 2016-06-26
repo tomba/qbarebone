@@ -9,8 +9,9 @@
 
 #include <qpa/qplatformnativeinterface.h>
 #include <QtPlatformSupport/private/qevdevmousemanager_p.h>
-//#include <QtPlatformSupport/private/qevdevkeyboardmanager_p.h>
-//#include <QtPlatformSupport/private/qevdevtouchmanager_p.h>
+#include <QtPlatformSupport/private/qevdevkeyboardmanager_p.h>
+#include <QtPlatformSupport/private/qevdevtouchmanager_p.h>
+#include <QtPlatformSupport/private/qlibinputhandler_p.h>
 
 #include <assert.h>
 #include <cstdio>
@@ -90,10 +91,13 @@ QBareClient::QBareClient(QApplication& a)
 
 	m_screen = bare->add_screen(QSize(w, h));
 
-
-	//m_keyManager = new QEvdevKeyboardManager(QLatin1String("EvdevKeyboard"), QString(), this);
-	m_mouseManager = new QEvdevMouseManager(QLatin1String("EvdevMouse"), QString(), this);
-	//new QEvdevTouchManager("EvdevTouch", QString(), this);
+#if 0
+	new QLibInputHandler(QLatin1String("libinput"), QString());
+#else
+	new QEvdevKeyboardManager(QLatin1String("EvdevKeyboard"), QString(), this);
+	new QEvdevMouseManager(QLatin1String("EvdevMouse"), QString(), this);
+	new QEvdevTouchManager(QLatin1String("EvdevTouch"), QString(), this);
+#endif
 
 	m_sockNotifier = new QSocketNotifier(m_card->fd(), QSocketNotifier::Read);
 	connect(m_sockNotifier, &QSocketNotifier::activated, this, &QBareClient::drmEvent);

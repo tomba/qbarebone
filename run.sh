@@ -1,5 +1,7 @@
 #!/bin/sh
 
+#QT_LOGGING_RULES="qt.qpa.input=true"
+
 #export QT_DEBUG_PLUGINS=1
 
 # XXX on Ubuntu with Gtk installed, failure to connect to X aborts the app.
@@ -13,7 +15,7 @@ mkdir -p plugins/platforms
 ln -fs ../../barebone/build/debug/libbarebone.so plugins/platforms/
 
 # For qemu
-export QT_QPA_EVDEV_MOUSE_PARAMETERS=abs
+export QT_QPA_EVDEV_MOUSE_PARAMETERS="abs"
 
 ./test/build/debug/test -platform barebone
 

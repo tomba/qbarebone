@@ -9,9 +9,6 @@
 
 #include "qbareinterface.h"
 
-struct QEvdevKeyboardManager;
-struct QEvdevMouseManager;
-
 class QBareClient : public QObject, public QBareClientInterface, public kms::PageFlipHandlerBase
 {
 	Q_OBJECT
@@ -34,9 +31,6 @@ private:
 	kms::Card* m_card;
 	kms::Connector* m_conn;
 	kms::Crtc* m_crtc;
-
-	QEvdevKeyboardManager* m_keyManager;
-	QEvdevMouseManager* m_mouseManager;
 
 	QBareScreenInterface* m_screen;
 

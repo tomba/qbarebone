@@ -30,9 +30,9 @@ QPaintDevice *QBareBackingStore::paintDevice()
 
 void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoint &offset)
 {
-	printf("QBareBackingStore::flush(%p, %u,%u %ux%u)\n", window,
-	       region.boundingRect().x(), region.boundingRect().y(),
-	       region.boundingRect().width(), region.boundingRect().height());
+	//printf("QBareBackingStore::flush(%p, %u,%u %ux%u)\n", window,
+	//       region.boundingRect().x(), region.boundingRect().y(),
+	//       region.boundingRect().width(), region.boundingRect().height());
 
 	QBareWindow *wnd = (QBareWindow*)this->window()->handle();
 	QBareScreen *scr = (QBareScreen*)wnd->screen();
