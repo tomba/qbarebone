@@ -12,6 +12,8 @@
 #include <sys/ioctl.h>
 #include <linux/kd.h>
 
+int run_moveblocks(QApplication& app);
+
 int main(int argc, char *argv[])
 {
 	//int tty = open("/dev/tty1", O_RDWR);
@@ -61,10 +63,12 @@ int main(int argc, char *argv[])
 	}
 #endif
 	printf("Enter mainloop\n");
-	int r = a.exec();
+	a.exec();
+
+	//run_moveblocks(a);
 
 	if (bb)
 		delete bb;
 
-	return r;
+	return 0;
 }

@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     qbareclient.cpp \
     openglwindow.cpp \
     trianglewindow.cpp \
-    rasterwindow.cpp
+    rasterwindow.cpp \
+    moveblocks.cpp
 
 HEADERS  += mainwindow.h \
     qbareclient.h \
