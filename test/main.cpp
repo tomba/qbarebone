@@ -7,11 +7,6 @@
 #include "trianglewindow.h"
 #include "rasterwindow.h"
 
-#include <cstdio>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <linux/kd.h>
-
 int run_moveblocks(QApplication& app);
 
 int main(int argc, char *argv[])

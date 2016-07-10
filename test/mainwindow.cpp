@@ -12,13 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->setupUi(this);
 
 	QStringList list;
-	list.append("item1");
-	list.append("item2");
-	list.append("item3");
-	list.append("item4");
-	list.append("item5");
-	list.append("item6");
-	list.append("item7");
+	for (int i = 0; i < 100; ++i)
+		list.append(QString::asprintf("item%d", i));
 
 	QStringListModel* model = new QStringListModel(list, this);
 	ui->listView->setModel(model);

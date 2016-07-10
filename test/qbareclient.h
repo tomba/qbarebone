@@ -31,6 +31,7 @@ private:
 	kms::Card* m_card;
 	kms::Connector* m_conn;
 	kms::Crtc* m_crtc;
+	kms::Plane* m_plane = nullptr;
 
 	QBareScreenInterface* m_screen;
 
