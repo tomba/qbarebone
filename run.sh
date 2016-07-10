@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#QT_LOGGING_RULES="qt.qpa.input=true"
+#export QT_LOGGING_RULES="qt.qpa.input=true"
 
 #export QT_DEBUG_PLUGINS=1
 
@@ -15,7 +15,7 @@ mkdir -p plugins/platforms
 ln -fs ../../barebone/build/debug/libbarebone.so plugins/platforms/
 
 # For qemu
-#export QT_QPA_EVDEV_MOUSE_PARAMETERS="abs"
+export QT_QPA_EVDEV_MOUSE_PARAMETERS="abs"
 
 ./test/build/debug/test -platform barebone
 

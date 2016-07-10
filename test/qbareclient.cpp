@@ -23,7 +23,7 @@
 using namespace kms;
 
 static const bool use_crtc = true;
-static const bool use_libinput = true;
+static const bool use_libinput = false;
 
 QBareClient::QBareClient(QApplication& a)
 {
@@ -42,10 +42,12 @@ QBareClient::QBareClient(QApplication& a)
 
 	m_card = new Card();
 
-	m_conn = m_card->get_first_connected_connector();
+	ResourceManager resman(*m_card);
+
+	m_conn = resman.reserve_connector();
 	ASSERT(m_conn);
 
-	m_crtc = m_conn->get_current_crtc();
+	m_crtc = resman.reserve_crtc(m_conn);
 	ASSERT(m_crtc);
 
 	const unsigned num_fbs = 2;
@@ -63,14 +65,7 @@ QBareClient::QBareClient(QApplication& a)
 		w = mode.hdisplay / 2;
 		h = mode.vdisplay / 2;
 
-		for (Plane* p : m_crtc->get_possible_planes())
-		{
-			if (p->plane_type() != PlaneType::Overlay)
-				continue;
-
-			m_plane = p;
-		}
-
+		m_plane = resman.reserve_overlay_plane(m_crtc, PixelFormat::XRGB8888);
 		ASSERT(m_plane);
 	}
 

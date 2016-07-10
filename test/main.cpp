@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 	printf("Enter mainloop\n");
 	app.exec();
 
-	//run_moveblocks(a);
+	//run_moveblocks(app);
 
 	if (bb)
 		delete bb;
