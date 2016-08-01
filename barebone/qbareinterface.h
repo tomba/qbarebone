@@ -19,6 +19,6 @@ class QBareInterface
 {
 public:
 	virtual ~QBareInterface() { }
-	virtual QBareScreenInterface* add_screen(QSize size) = 0;
+	virtual QBareScreenInterface* add_screen(QSize size, QString name) = 0;
 	virtual void install_client(QBareClientInterface* client) = 0;
 };

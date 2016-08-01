@@ -55,9 +55,9 @@ void QBareIntegration::createInputHandlers()
 #endif
 }
 
-QBareScreenInterface* QBareIntegration::add_screen(QSize size)
+QBareScreenInterface* QBareIntegration::add_screen(QSize size, QString name)
 {
-	QBareScreen *screen = new QBareScreen(QRect(0, 0, size.width(), size.height()), 32,
+	QBareScreen *screen = new QBareScreen(name, QRect(0, 0, size.width(), size.height()), 32,
 					      QImage::Format_ARGB32_Premultiplied,
 					      (QBareIntegration*)this);
 	screenAdded(screen);

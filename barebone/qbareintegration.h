@@ -29,7 +29,7 @@ public:
 	QPlatformServices *services() const;
 
 	// QBareInterface
-	QBareScreenInterface* add_screen(QSize size);
+	QBareScreenInterface* add_screen(QSize size, QString name);
 	void install_client(QBareClientInterface *client);
 
 	QBareClientInterface* client() const { return m_clientInterface; }

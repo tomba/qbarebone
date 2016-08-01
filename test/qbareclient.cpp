@@ -92,7 +92,7 @@ QBareClient::QBareClient(QApplication& a)
 		m_display_fb = fb;
 	}
 
-	m_screen = bare->add_screen(QSize(w, h));
+	m_screen = bare->add_screen(QSize(w, h), "LCD");
 
 	if (use_libinput) {
 		new QLibInputHandler(QLatin1String("libinput"), QString());

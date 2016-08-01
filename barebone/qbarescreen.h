@@ -11,13 +11,13 @@ class QBareScreen : public QObject, public QPlatformScreen, public QBareScreenIn
 {
 	Q_OBJECT
 public:
-	QBareScreen(const QRect& geom, int depth, QImage::Format format, QBareIntegration* integration);
+	QBareScreen(QString name, const QRect& geom, int depth, QImage::Format format, QBareIntegration* integration);
 
 	// QPlatformScreen
 	QRect geometry() const { return m_geometry; }
 	int depth() const { return m_depth; }
 	QImage::Format format() const { return m_format; }
-	QString name() const { return "myscreen"; }
+	QString name() const { return m_name; }
 
 	QPlatformCursor *cursor() const;
 
@@ -38,6 +38,8 @@ protected:
 	bool event(QEvent *event) Q_DECL_OVERRIDE;
 
 private:
+	QString m_name;
+
 	QRect m_geometry;
 	int m_depth;
 	QImage::Format m_format;
