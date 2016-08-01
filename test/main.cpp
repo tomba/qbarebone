@@ -2,6 +2,7 @@
 #include <QApplication>
 #include <QScreen>
 #include <QtDebug>
+#include <qnamespace.h>
 
 #include "qbareclient.h"
 #include "trianglewindow.h"
@@ -12,6 +13,10 @@ int run_moveblocks(QApplication& app);
 int main(int argc, char *argv[])
 {
 	printf("Create App\n");
+
+	// XXX with high dpi scaling, plugin crashes without initial screen
+	QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling, true);
+
 	QApplication app(argc, argv);
 
 	QBareClient* bb = nullptr;

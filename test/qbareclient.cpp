@@ -23,7 +23,7 @@
 using namespace kms;
 
 static const bool use_crtc = true;
-static const bool use_libinput = false;
+static const bool use_libinput = true;
 
 QBareClient::QBareClient(QApplication& a)
 {

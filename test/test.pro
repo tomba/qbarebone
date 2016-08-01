@@ -17,9 +17,9 @@ UI_DIR = $$DESTDIR/.ui
 
 INCLUDEPATH += ../barebone
 
-INCLUDEPATH += /home/tomba/work-lappy/kmsxx/kms++/inc
-INCLUDEPATH += /home/tomba/work-lappy/kmsxx/kms++util/inc
-LIBPATH     += /home/tomba/work-lappy/kmsxx/build/lib
+INCLUDEPATH += /home/tomba/work/kmsxx/kms++/inc
+INCLUDEPATH += /home/tomba/work/kmsxx/kms++util/inc
+LIBPATH     += /home/tomba/work/kmsxx/build/lib
 LIBS        += -lkms++ -lkms++util -ldrm
 
 SOURCES += main.cpp\

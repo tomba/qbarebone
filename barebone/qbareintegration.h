@@ -35,11 +35,12 @@ public:
 	QBareClientInterface* client() const { return m_clientInterface; }
 
 private:
-	QPlatformInputContext *m_inputContext;
-	QBareNativeInterface* m_nativeInterface;
-	QBareClientInterface* m_clientInterface;
 	void createInputHandlers();
-	QEvdevKeyboardManager* m_kbdMgr;
-	QEvdevMouseManager *m_mouseMgr;
+
+	QPlatformInputContext* m_inputContext = nullptr;
+	QBareNativeInterface* m_nativeInterface = nullptr;
+	QBareClientInterface* m_clientInterface = nullptr;
+	QEvdevKeyboardManager* m_kbdMgr = nullptr;
+	QEvdevMouseManager* m_mouseMgr = nullptr;
 	QScopedPointer<QPlatformFontDatabase> m_fontDatabase;
 };

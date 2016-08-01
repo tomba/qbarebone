@@ -12,7 +12,7 @@
 #include <cstdio>
 
 QBareScreen::QBareScreen(const QRect &geom, int depth, QImage::Format format, QBareIntegration* integration)
-	: m_geometry(geom), m_depth(depth), m_format(format), m_integration(integration)
+	: m_geometry(geom), m_depth(depth), m_format(format), m_integration(integration), m_updatePending(false)
 {
 	printf("QBareScreen(%dx%d)\n", geom.width(), geom.height());
 
