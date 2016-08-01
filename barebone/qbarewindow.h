@@ -18,10 +18,12 @@ public:
 	bool setMouseGrabEnabled(bool) { return false; }
 	void raise();
 	void lower();
+	WId winId() const { return m_windowId; }
 
 	void set_store(QBareBackingStore* store) { m_store = store; }
 	QBareBackingStore* store() const { return m_store; }
 
 private:
 	QBareBackingStore* m_store;
+	WId m_windowId;
 };

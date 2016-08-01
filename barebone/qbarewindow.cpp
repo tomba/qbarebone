@@ -6,6 +6,9 @@
 QBareWindow::QBareWindow(QWindow *window)
 	:QPlatformWindow(window)
 {
+	static QAtomicInt winIdGenerator(1);
+	m_windowId = winIdGenerator.fetchAndAddRelaxed(1);
+
 	printf("QBareWindow(%p, %d,%d %dx%d)\n", window,
 	       window->x(), window->y(), window->width(), window->height());
 }
