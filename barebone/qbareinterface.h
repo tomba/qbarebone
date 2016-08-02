@@ -2,11 +2,13 @@
 
 #include <QSize>
 
+class QBareScreenInterface;
+
 class QBareClientInterface
 {
 public:
 	virtual ~QBareClientInterface() { }
-	virtual void flush() = 0;
+	virtual void flush(QBareScreenInterface* screen) = 0;
 };
 
 class QBareScreenInterface

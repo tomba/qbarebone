@@ -9,8 +9,8 @@
 #include "trianglewindow.h"
 #include "rasterwindow.h"
 
-int run_moveblocks(QApplication& app);
-static void dump_screens(QGuiApplication& a);
+QWidget* create_moveblocks();
+void dump_screens(QGuiApplication& a);
 
 int main(int argc, char *argv[])
 {
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 	if (app.platformName() == "barebone")
 		bb = new QBareClient(app);
 
-	dump_screens(app);
+	//dump_screens(app);
 
 #if 1
 	QList<QScreen*> screens = app.screens();
@@ -34,16 +34,17 @@ int main(int argc, char *argv[])
 	QScreen* hdmi = screens[1];
 
 	MainWindow *w1 = new MainWindow();
-	w1->winId();
-	w1->windowHandle()->setScreen(lcd);
+	//w1->winId();
+	//w1->windowHandle()->setScreen(lcd);
 	w1->move(50, 50);
 	w1->show();
 
-	MainWindow *w2 = new MainWindow();
-	w2->winId();
-	w2->windowHandle()->setScreen(hdmi);
-	w2->move(300, 50);
-	w2->show();
+	//MainWindow *w2 = new MainWindow();
+	//w2->winId();
+	//w2->windowHandle()->setScreen(hdmi);
+	//w2->move(300, 50);
+	//w2->show();
+
 
 #endif
 #if 0
@@ -65,10 +66,17 @@ int main(int argc, char *argv[])
 		w->show();
 	}
 #endif
+
+#if 0
+	QWidget* moveblk = create_moveblocks();
+	moveblk->windowHandle()->setScreen(hdmi);
+	moveblk->hide();
+	moveblk->show();
+#endif
+
 	printf("Enter mainloop\n");
 	app.exec();
 
-	//run_moveblocks(app);
 
 	if (bb)
 		delete bb;
@@ -88,7 +96,7 @@ QString Orientation(Qt::ScreenOrientation orientation)
 	}
 }
 
-static void dump_screens(QGuiApplication& a)
+void dump_screens(QGuiApplication& a)
 {
 	qDebug() << "Number of screens:" << QGuiApplication::screens().size();
 

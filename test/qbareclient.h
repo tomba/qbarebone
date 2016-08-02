@@ -40,7 +40,7 @@ public:
 
 private:
 	// QBareClientInterface
-	virtual void flush();
+	virtual void flush(QBareScreenInterface* screen);
 
 signals:
 

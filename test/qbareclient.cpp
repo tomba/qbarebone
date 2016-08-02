@@ -25,7 +25,7 @@ using namespace kms;
 static const bool use_crtc = true;
 static const bool use_libinput = true;
 
-static void setup_display(QKmsDisplay* display, const char* name, ResourceManager& resman, bool use_crtc)
+static void setup_kms_display(QKmsDisplay* display, const char* name, ResourceManager& resman, bool use_crtc)
 {
 	display->m_conn = resman.reserve_connector(name);
 	ASSERT(display->m_conn);
@@ -95,8 +95,8 @@ QBareClient::QBareClient(QApplication& a)
 
 	ResourceManager resman(*m_card);
 
-	setup_display(&m_lcd, "Unknown", resman, use_crtc);
-	setup_display(&m_hdmi, "HDMI", resman, use_crtc);
+	setup_kms_display(&m_lcd, "Unknown", resman, use_crtc);
+	setup_kms_display(&m_hdmi, "HDMI", resman, use_crtc);
 
 	m_lcd.m_screen = bare->add_screen(QSize(m_lcd.m_display_fb->width(), m_lcd.m_display_fb->height()), "LCD");
 	m_hdmi.m_screen = bare->add_screen(QSize(m_hdmi.m_display_fb->width(), m_hdmi.m_display_fb->height()), "HDMI");
@@ -119,10 +119,12 @@ void QBareClient::drmEvent()
 	m_card->call_page_flip_handlers();
 }
 
-void QBareClient::flush()
+void QBareClient::flush(QBareScreenInterface* screen)
 {
-	m_lcd.flush();
-	m_hdmi.flush();
+	if (screen == m_lcd.m_screen)
+		m_lcd.flush();
+	else if (screen == m_hdmi.m_screen)
+		m_hdmi.flush();
 }
 
 void QKmsDisplay::flush()

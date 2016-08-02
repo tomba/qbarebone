@@ -14,7 +14,7 @@
 QBareScreen::QBareScreen(QString name, const QRect &geom, int depth, QImage::Format format, QBareIntegration* integration)
 	: m_name(name), m_geometry(geom), m_depth(depth), m_format(format), m_integration(integration), m_updatePending(false)
 {
-	printf("QBareScreen(%dx%d, this %p)\n", geom.width(), geom.height(), this);
+	printf("QBareScreen(%s, %dx%d)\n", name.toLatin1().data(), geom.width(), geom.height());
 
 	m_cursor = new QBareCursor(this);
 }
@@ -51,7 +51,7 @@ void QBareScreen::lower(QBareWindow* wnd)
 bool QBareScreen::event(QEvent *event)
 {
 	if (event->type() == QEvent::UpdateRequest) {
-		m_integration->client()->flush();
+		m_integration->client()->flush(this);
 		m_updatePending = false;
 		return true;
 	}
@@ -87,5 +87,7 @@ void QBareScreen::addWindow(QBareWindow* wnd)
 
 void QBareScreen::removeWindow(QBareWindow* wnd)
 {
-	m_windowStack.removeOne(wnd);
+	bool b = m_windowStack.removeOne(wnd);
+	if (!b)
+		printf("FAILED TO REMOVE WINDOW %u\n", wnd->winId());
 }

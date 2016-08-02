@@ -9,22 +9,22 @@ QBareWindow::QBareWindow(QWindow *window)
 	static QAtomicInt winIdGenerator(1);
 	m_windowId = winIdGenerator.fetchAndAddRelaxed(1);
 
-	printf("QBareWindow(%p, %d,%d %dx%d)\n", window,
+	printf("QBareWindow(%u, %d,%d %dx%d)\n", winId(),
 	       window->x(), window->y(), window->width(), window->height());
 }
 
 QBareWindow::~QBareWindow()
 {
-	printf("~QBareWindow\n");
+	printf("~QBareWindow(%u)\n", winId());
 }
 
 void QBareWindow::setVisible(bool visible)
 {
+	printf("QBareWindow::setVisible(%u, scr %s, vis %d)\n", winId(), screen()->name().toLatin1().data(), visible);
+
 	QPlatformWindow::setVisible(visible);
 
 	QBareScreen* scr = (QBareScreen*)screen();
-
-	printf("%s (%p, %p)\n", __func__, window(), scr);
 
 	if (visible)
 		scr->addWindow(this);
@@ -34,26 +34,24 @@ void QBareWindow::setVisible(bool visible)
 
 void QBareWindow::invalidateSurface()
 {
-	printf("wnd: invalidate\n");
-	printf("%s (%p, %p)\n", __func__, window(), screen()->screen());
+	printf("QBareWindow::invalidateSurface(%u)\n", winId());
 }
 
 void QBareWindow::requestUpdate()
 {
-	printf("wnd: requestUpdate\n");
-	printf("%s (%p, %p)\n", __func__, window(), screen()->screen());
+	printf("QBareWindow::requestUpdate(%u)\n", winId());
 }
 
 void QBareWindow::raise()
 {
+	printf("QBareWindow::raise(%u)\n", winId());
 	QBareScreen* scr = (QBareScreen*)screen();
-	printf("%s (%p, %p)\n", __func__, window(), screen()->screen());
 	scr->raise(this);
 }
 
 void QBareWindow::lower()
 {
+	printf("QBareWindow::lower(%u)\n", winId());
 	QBareScreen* scr = (QBareScreen*)screen();
-	printf("%s (%p, %p)\n", __func__, window(), screen()->screen());
 	scr->lower(this);
 }
