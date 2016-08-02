@@ -18,4 +18,5 @@ ln -fs ../../barebone/build/debug/libbarebone.so plugins/platforms/
 #export QT_QPA_EVDEV_MOUSE_PARAMETERS="abs"
 
 ./test/build/debug/test -platform barebone
+#gdb --args ./test/build/debug/test -platform barebone
 

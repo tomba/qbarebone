@@ -24,6 +24,8 @@ void QBareWindow::setVisible(bool visible)
 
 	QBareScreen* scr = (QBareScreen*)screen();
 
+	printf("%s (%p, %p)\n", __func__, window(), scr);
+
 	if (visible)
 		scr->addWindow(this);
 	else
@@ -33,21 +35,25 @@ void QBareWindow::setVisible(bool visible)
 void QBareWindow::invalidateSurface()
 {
 	printf("wnd: invalidate\n");
+	printf("%s (%p, %p)\n", __func__, window(), screen()->screen());
 }
 
 void QBareWindow::requestUpdate()
 {
 	printf("wnd: requestUpdate\n");
+	printf("%s (%p, %p)\n", __func__, window(), screen()->screen());
 }
 
 void QBareWindow::raise()
 {
 	QBareScreen* scr = (QBareScreen*)screen();
+	printf("%s (%p, %p)\n", __func__, window(), screen()->screen());
 	scr->raise(this);
 }
 
 void QBareWindow::lower()
 {
 	QBareScreen* scr = (QBareScreen*)screen();
+	printf("%s (%p, %p)\n", __func__, window(), screen()->screen());
 	scr->lower(this);
 }

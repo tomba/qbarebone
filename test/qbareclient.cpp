@@ -25,6 +25,57 @@ using namespace kms;
 static const bool use_crtc = true;
 static const bool use_libinput = true;
 
+static void setup_display(QKmsDisplay* display, const char* name, ResourceManager& resman, bool use_crtc)
+{
+	display->m_conn = resman.reserve_connector(name);
+	ASSERT(display->m_conn);
+
+	display->m_crtc = resman.reserve_crtc(display->m_conn);
+	ASSERT(display->m_crtc);
+
+	const unsigned num_fbs = 2;
+
+	uint32_t w, h;
+	Videomode mode;
+
+	if (use_crtc) {
+		mode = display->m_conn->get_default_mode();
+		w = mode.hdisplay;
+		h = mode.vdisplay;
+	} else {
+		mode = display->m_crtc->mode();
+
+		w = mode.hdisplay / 2;
+		h = mode.vdisplay / 2;
+
+		display->m_plane = resman.reserve_overlay_plane(display->m_crtc, PixelFormat::XRGB8888);
+		ASSERT(display->m_plane);
+	}
+
+	for (unsigned i = 0; i < num_fbs; ++i) {
+		DumbFramebuffer* fb = new DumbFramebuffer(display->m_crtc->card(), w, h, PixelFormat::XRGB8888);
+		draw_test_pattern(*fb);
+		display->m_free_fbs.push_back(fb);
+	}
+
+	{
+		auto fb = display->m_free_fbs.back();
+		display->m_free_fbs.pop_back();
+
+		if (use_crtc) {
+			int r = display->m_crtc->set_mode(display->m_conn, *fb, mode);
+			ASSERT(r == 0);
+		} else {
+			int r = display->m_crtc->set_plane(display->m_plane, *fb,
+						  0, 0, w, h,
+						  0, 0, w, h);
+			ASSERT(r == 0);
+		}
+
+		display->m_display_fb = fb;
+	}
+}
+
 QBareClient::QBareClient(QApplication& a)
 {
 	printf("QBareClient()\n");
@@ -44,55 +95,11 @@ QBareClient::QBareClient(QApplication& a)
 
 	ResourceManager resman(*m_card);
 
-	m_conn = resman.reserve_connector();
-	ASSERT(m_conn);
+	setup_display(&m_lcd, "Unknown", resman, use_crtc);
+	setup_display(&m_hdmi, "HDMI", resman, use_crtc);
 
-	m_crtc = resman.reserve_crtc(m_conn);
-	ASSERT(m_crtc);
-
-	const unsigned num_fbs = 2;
-
-	uint32_t w, h;
-	Videomode mode;
-
-	if (use_crtc) {
-		mode = m_conn->get_default_mode();
-		w = mode.hdisplay;
-		h = mode.vdisplay;
-	} else {
-		mode = m_crtc->mode();
-
-		w = mode.hdisplay / 2;
-		h = mode.vdisplay / 2;
-
-		m_plane = resman.reserve_overlay_plane(m_crtc, PixelFormat::XRGB8888);
-		ASSERT(m_plane);
-	}
-
-	for (unsigned i = 0; i < num_fbs; ++i) {
-		DumbFramebuffer* fb = new DumbFramebuffer(*m_card, w, h, PixelFormat::XRGB8888);
-		draw_test_pattern(*fb);
-		m_free_fbs.push_back(fb);
-	}
-
-	{
-		auto fb = m_free_fbs.back();
-		m_free_fbs.pop_back();
-
-		if (use_crtc) {
-			int r = m_crtc->set_mode(m_conn, *fb, mode);
-			ASSERT(r == 0);
-		} else {
-			int r = m_crtc->set_plane(m_plane, *fb,
-						  0, 0, w, h,
-						  0, 0, w, h);
-			ASSERT(r == 0);
-		}
-
-		m_display_fb = fb;
-	}
-
-	m_screen = bare->add_screen(QSize(w, h), "LCD");
+	m_lcd.m_screen = bare->add_screen(QSize(m_lcd.m_display_fb->width(), m_lcd.m_display_fb->height()), "LCD");
+	m_hdmi.m_screen = bare->add_screen(QSize(m_hdmi.m_display_fb->width(), m_hdmi.m_display_fb->height()), "HDMI");
 
 	if (use_libinput) {
 		new QLibInputHandler(QLatin1String("libinput"), QString());
@@ -113,6 +120,12 @@ void QBareClient::drmEvent()
 }
 
 void QBareClient::flush()
+{
+	m_lcd.flush();
+	m_hdmi.flush();
+}
+
+void QKmsDisplay::flush()
 {
 	if (use_crtc) {
 		if (m_free_fbs.size() == 0) {
@@ -159,7 +172,7 @@ void QBareClient::flush()
 	}
 }
 
-void QBareClient::handle_page_flip(uint32_t frame, double time)
+void QKmsDisplay::handle_page_flip(uint32_t frame, double time)
 {
 	//printf("page flip, ready: %lu\n", m_ready_fbs.size());
 

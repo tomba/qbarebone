@@ -9,26 +9,8 @@
 
 #include "qbareinterface.h"
 
-class QBareClient : public QObject, public QBareClientInterface, public kms::PageFlipHandlerBase
+struct QKmsDisplay : public kms::PageFlipHandlerBase
 {
-	Q_OBJECT
-public:
-	QBareClient(QApplication& a);
-
-private:
-	// QBareClientInterface
-	virtual void flush();
-
-	// PageFlipHandlerBase
-	virtual void handle_page_flip(uint32_t frame, double time);
-
-signals:
-
-public slots:
-	void drmEvent();
-
-private:
-	kms::Card* m_card;
 	kms::Connector* m_conn;
 	kms::Crtc* m_crtc;
 	kms::Plane* m_plane = nullptr;
@@ -40,7 +22,37 @@ private:
 	kms::DumbFramebuffer* m_queued_fb = 0;
 	kms::DumbFramebuffer* m_display_fb = 0;
 
+	bool m_pending_draw = false;
+
+	void flush();
+
+
+	// PageFlipHandlerBase
+	virtual void handle_page_flip(uint32_t frame, double time);
+
+};
+
+class QBareClient : public QObject, public QBareClientInterface
+{
+	Q_OBJECT
+public:
+	QBareClient(QApplication& a);
+
+private:
+	// QBareClientInterface
+	virtual void flush();
+
+signals:
+
+public slots:
+	void drmEvent();
+
+private:
+	kms::Card* m_card;
+
 	QSocketNotifier* m_sockNotifier;
 
-	bool m_pending_draw = false;
+	QKmsDisplay m_lcd;
+	QKmsDisplay m_hdmi;
+
 };

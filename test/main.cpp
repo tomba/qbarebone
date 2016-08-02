@@ -3,6 +3,7 @@
 #include <QScreen>
 #include <QtDebug>
 #include <qnamespace.h>
+#include <QDesktopWidget>
 
 #include "qbareclient.h"
 #include "trianglewindow.h"
@@ -28,19 +29,22 @@ int main(int argc, char *argv[])
 	dump_screens(app);
 
 #if 1
-	auto screens = app.screens();
+	QList<QScreen*> screens = app.screens();
+	QScreen* lcd = screens[0];
+	QScreen* hdmi = screens[1];
 
-	for (int i = 0; i < screens.size(); ++i) {
-		//qDebug() << QString("Create window on screen %1").arg(screens.at(i)->name());
+	MainWindow *w1 = new MainWindow();
+	w1->winId();
+	w1->windowHandle()->setScreen(lcd);
+	w1->move(50, 50);
+	w1->show();
 
-		MainWindow *w = new MainWindow();
-		w->move(50, 0);
-		w->show();
+	MainWindow *w2 = new MainWindow();
+	w2->winId();
+	w2->windowHandle()->setScreen(hdmi);
+	w2->move(300, 50);
+	w2->show();
 
-		//MainWindow *w2 = new MainWindow();
-		//w2->move(300, 50);
-		//w2->show();
-	}
 #endif
 #if 0
 	{
