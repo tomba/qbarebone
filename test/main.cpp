@@ -16,8 +16,10 @@ int main(int argc, char *argv[])
 {
 	printf("Create App\n");
 
+#ifdef AA_DisableHighDpiScaling
 	// XXX with high dpi scaling, plugin crashes without initial screen
-	QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling, true);
+	QCoreApplication::setAttribute(AA_DisableHighDpiScaling, true);
+#endif
 
 	QApplication app(argc, argv);
 
