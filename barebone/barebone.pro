@@ -1,5 +1,7 @@
 QT += core-private gui-private platformsupport-private
 
+CONFIG += c++11
+
 TARGET = barebone
 TEMPLATE = lib
 CONFIG += plugin
