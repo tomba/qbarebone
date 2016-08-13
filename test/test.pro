@@ -7,17 +7,17 @@ TEMPLATE = app
 
 QMAKE_CXXFLAGS += -Wno-unused-parameter
 
-release: DESTDIR = build/release
-debug:   DESTDIR = build/debug
+DESTDIR = $$top_builddir/bin
 
-OBJECTS_DIR = $$DESTDIR/.obj
-MOC_DIR = $$DESTDIR/.moc
-RCC_DIR = $$DESTDIR/.qrc
-UI_DIR = $$DESTDIR/.ui
+BUILDDIR = $$top_builddir/test
+OBJECTS_DIR = $$BUILDDIR/obj
+MOC_DIR = $$BUILDDIR/moc
+RCC_DIR = $$BUILDDIR/qrc
+UI_DIR = $$BUILDDIR/ui
 
-INCLUDEPATH += ../barebone
+INCLUDEPATH += $$top_srcdir/barebone
 
-KMSXX = /home/tomba/work/kmsxx
+KMSXX = $$top_srcdir/../kmsxx
 INCLUDEPATH += $$KMSXX/kms++/inc
 INCLUDEPATH += $$KMSXX/kms++util/inc
 LIBPATH     += $$KMSXX/build/lib

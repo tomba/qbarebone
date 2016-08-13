@@ -11,13 +11,13 @@ QMAKE_CXXFLAGS += -Wno-unused-parameter
 DEFINES += Q_FONTCONFIGDATABASE
 LIBS += -lfontconfig
 
-release: DESTDIR = build/release
-debug:   DESTDIR = build/debug
+DESTDIR = $$top_builddir/plugins/platforms/
 
-OBJECTS_DIR = $$DESTDIR/.obj
-MOC_DIR = $$DESTDIR/.moc
-RCC_DIR = $$DESTDIR/.qrc
-UI_DIR = $$DESTDIR/.ui
+BUILDDIR = $$top_builddir/barebone
+OBJECTS_DIR = $$BUILDDIR/obj
+MOC_DIR = $$BUILDDIR/moc
+RCC_DIR = $$BUILDDIR/qrc
+UI_DIR = $$BUILDDIR/ui
 
 SOURCES += main.cpp qbareintegration.cpp qbarebackingstore.cpp qbarescreen.cpp \
     qbarewindow.cpp \

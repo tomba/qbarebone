@@ -8,15 +8,11 @@
 # So add the DISPLAY here, even if we never use X
 export DISPLAY=:0
 
-export QT_PLUGIN_PATH=./plugins
-
-# hack to create platforms plugin dir
-mkdir -p plugins/platforms
-ln -fs ../../barebone/build/debug/libbarebone.so plugins/platforms/
+export QT_PLUGIN_PATH=./build/plugins
 
 # For qemu
 #export QT_QPA_EVDEV_MOUSE_PARAMETERS="abs"
 
-./test/build/debug/test -platform barebone
-#gdb --args ./test/build/debug/test -platform barebone
+./build/bin/test -platform barebone
+#gdb --args ./build/bin/test -platform barebone
 
