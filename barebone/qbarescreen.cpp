@@ -89,5 +89,5 @@ void QBareScreen::removeWindow(QBareWindow* wnd)
 {
 	bool b = m_windowStack.removeOne(wnd);
 	if (!b)
-		printf("FAILED TO REMOVE WINDOW %u\n", wnd->winId());
+		printf("FAILED TO REMOVE WINDOW %u\n", (unsigned)wnd->winId());
 }

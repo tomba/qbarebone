@@ -13,7 +13,7 @@ QBareBackingStore::QBareBackingStore(QWindow *window, QBareIntegration* integrat
 	: QPlatformBackingStore(window),
 	  m_integration(integration)
 {
-	printf("QBareBackingStore(wnd: %u)\n", window->winId());
+	printf("QBareBackingStore(wnd: %u)\n", (unsigned)window->winId());
 }
 
 QBareBackingStore::~QBareBackingStore()
@@ -30,7 +30,7 @@ QPaintDevice *QBareBackingStore::paintDevice()
 
 void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoint &offset)
 {
-	printf("QBareBackingStore::flush(%u, %u,%u %ux%u, scr %s)\n", window->winId(),
+	printf("QBareBackingStore::flush(%u, %u,%u %ux%u, scr %s)\n", (unsigned)window->winId(),
 	       region.boundingRect().x(), region.boundingRect().y(),
 	       region.boundingRect().width(), region.boundingRect().height(),
 	       window->screen()->name().toLatin1().data());
@@ -45,7 +45,7 @@ void QBareBackingStore::flush(QWindow *window, const QRegion &region, const QPoi
 
 void QBareBackingStore::resize(const QSize &size, const QRegion &staticContents)
 {
-	printf("QBareBackingStore::resize(%u, %dx%d)\n", window()->winId(), size.width(), size.height());
+	printf("QBareBackingStore::resize(%u, %dx%d)\n", (unsigned)window()->winId(), size.width(), size.height());
 
 	QBareWindow *wnd = (QBareWindow*)window()->handle();
 	QBareScreen *scr = (QBareScreen*)wnd->screen();
