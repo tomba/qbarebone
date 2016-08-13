@@ -30,27 +30,26 @@ int main(int argc, char *argv[])
 
 	//dump_screens(app);
 
-#if 1
 	QList<QScreen*> screens = app.screens();
 	QScreen* lcd = screens[0];
 	QScreen* hdmi = screens[1];
 
-	MainWindow *w1 = new MainWindow();
-	//w1->winId();
-	//w1->windowHandle()->setScreen(lcd);
-	w1->move(50, 50);
-	w1->show();
+	int test_num = 0;
 
-	//MainWindow *w2 = new MainWindow();
-	//w2->winId();
-	//w2->windowHandle()->setScreen(hdmi);
-	//w2->move(300, 50);
-	//w2->show();
+	if (test_num == 0) {
+		MainWindow *w1 = new MainWindow();
+		//w1->winId();
+		//w1->windowHandle()->setScreen(lcd);
+		w1->move(50, 50);
+		w1->show();
 
+		//MainWindow *w2 = new MainWindow();
+		//w2->winId();
+		//w2->windowHandle()->setScreen(hdmi);
+		//w2->move(300, 50);
+		//w2->show();
 
-#endif
-#if 0
-	{
+	} else if (test_num == 1) {
 		QSurfaceFormat format;
 		format.setSamples(16);
 
@@ -60,25 +59,18 @@ int main(int argc, char *argv[])
 		window->show();
 
 		window->setAnimating(true);
-	}
-#endif
-#if 0
-	{
+	} else if (test_num == 2) {
 		RasterWindow *w = new RasterWindow();
 		w->show();
+	} else if (test_num == 3) {
+		QWidget* moveblk = create_moveblocks();
+		moveblk->windowHandle()->setScreen(hdmi);
+		moveblk->hide();
+		moveblk->show();
 	}
-#endif
-
-#if 0
-	QWidget* moveblk = create_moveblocks();
-	moveblk->windowHandle()->setScreen(hdmi);
-	moveblk->hide();
-	moveblk->show();
-#endif
 
 	printf("Enter mainloop\n");
 	app.exec();
-
 
 	if (bb)
 		delete bb;
