@@ -19,61 +19,59 @@
 #include <cstdio>
 #include <kms++/kms++.h>
 #include <kms++util/kms++util.h>
+#include <memory>
 
+using namespace std;
 using namespace kms;
 
-static const bool use_crtc = true;
 static const bool use_libinput = true;
 
-static void setup_kms_display(QKmsDisplay* display, const char* name, ResourceManager& resman, bool use_crtc)
+static void setup_kms_display(QKmsDisplay* display, const char* name, ResourceManager& resman)
 {
-	display->m_conn = resman.reserve_connector(name);
-	ASSERT(display->m_conn);
+	PixelFormat format = PixelFormat::XRGB8888;
 
-	display->m_crtc = resman.reserve_crtc(display->m_conn);
-	ASSERT(display->m_crtc);
+	Card& card = resman.card();
+
+	Connector* conn = resman.reserve_connector(name);
+	ASSERT(conn);
+
+	Crtc* crtc = resman.reserve_crtc(conn);
+	ASSERT(crtc);
+
+	Plane* primary = resman.reserve_primary_plane(crtc, format);
+
+	display->m_conn = conn;
+	display->m_crtc = crtc;
+	display->m_primary = primary;
 
 	const unsigned num_fbs = 2;
 
-	uint32_t w, h;
-	Videomode mode;
+	Videomode mode = conn->get_default_mode();
+	uint32_t w = mode.hdisplay;
+	uint32_t h = mode.vdisplay;
 
-	if (use_crtc) {
-		mode = display->m_conn->get_default_mode();
-		w = mode.hdisplay;
-		h = mode.vdisplay;
-	} else {
-		mode = display->m_crtc->mode();
-
-		w = mode.hdisplay / 2;
-		h = mode.vdisplay / 2;
-
-		display->m_plane = resman.reserve_overlay_plane(display->m_crtc, PixelFormat::XRGB8888);
-		ASSERT(display->m_plane);
-	}
-
+	// Allocate buffers
 	for (unsigned i = 0; i < num_fbs; ++i) {
-		DumbFramebuffer* fb = new DumbFramebuffer(display->m_crtc->card(), w, h, PixelFormat::XRGB8888);
+		DumbFramebuffer* fb = new DumbFramebuffer(card, w, h, format);
 		draw_test_pattern(*fb);
 		display->m_free_fbs.push_back(fb);
 	}
 
-	{
-		auto fb = display->m_free_fbs.back();
-		display->m_free_fbs.pop_back();
+	// Setup initial display
 
-		if (use_crtc) {
-			int r = display->m_crtc->set_mode(display->m_conn, *fb, mode);
-			ASSERT(r == 0);
-		} else {
-			int r = display->m_crtc->set_plane(display->m_plane, *fb,
-						  0, 0, w, h,
-						  0, 0, w, h);
-			ASSERT(r == 0);
-		}
+	DumbFramebuffer* fb = display->m_free_fbs.back();
+	display->m_free_fbs.pop_back();
 
-		display->m_display_fb = fb;
-	}
+	display->m_display_fb = fb;
+
+	AtomicReq req(card);
+
+	unique_ptr<Blob> mode_blob = mode.to_blob(card);
+
+	req.add_display(conn, crtc, mode_blob.get(), primary, fb);
+
+	int r = req.commit_sync(true);
+	ASSERT(r == 0);
 }
 
 QBareClient::QBareClient(QApplication& a)
@@ -95,8 +93,8 @@ QBareClient::QBareClient(QApplication& a)
 
 	ResourceManager resman(*m_card);
 
-	setup_kms_display(&m_lcd, "Unknown", resman, use_crtc);
-	setup_kms_display(&m_hdmi, "HDMI", resman, use_crtc);
+	setup_kms_display(&m_lcd, "Unknown", resman);
+	setup_kms_display(&m_hdmi, "HDMI", resman);
 
 	m_lcd.m_screen = bare->add_screen(QSize(m_lcd.m_display_fb->width(), m_lcd.m_display_fb->height()), "LCD");
 	m_hdmi.m_screen = bare->add_screen(QSize(m_hdmi.m_display_fb->width(), m_hdmi.m_display_fb->height()), "HDMI");
@@ -129,49 +127,30 @@ void QBareClient::flush(QBareScreenInterface* screen)
 
 void QKmsDisplay::flush()
 {
-	if (use_crtc) {
-		if (m_free_fbs.size() == 0) {
-			m_pending_draw = true;
-			return;
-		}
-
-		DumbFramebuffer* fb = m_free_fbs.back();
-		m_free_fbs.pop_back();
-
-		QImage image(fb->map(0), fb->width(), fb->height(), fb->stride(0), QImage::Format::Format_ARGB32);
-
-		m_screen->draw(image);
-
-		if (m_queued_fb == nullptr) {
-			int r = m_crtc->page_flip(*fb, (PageFlipHandlerBase*)this);
-			ASSERT(r == 0);
-
-			m_queued_fb = fb;
-		} else {
-			m_ready_fbs.push_back(fb);
-		}
-
-		m_pending_draw = false;
-	} else {
-		DumbFramebuffer* fb = m_free_fbs.back();
-		m_free_fbs.pop_back();
-
-		QImage image(fb->map(0), fb->width(), fb->height(), fb->stride(0), QImage::Format::Format_ARGB32);
-
-		m_screen->draw(image);
-
-		uint32_t w = fb->width();
-		uint32_t h = fb->height();
-
-		m_crtc->set_plane(m_plane, *fb,
-				  0, 0, w, h,
-				  0, 0, w, h);
-
-		if (m_display_fb)
-			m_free_fbs.push_back(m_display_fb);
-
-		m_display_fb = fb;
+	if (m_free_fbs.size() == 0) {
+		m_pending_draw = true;
+		return;
 	}
+
+	DumbFramebuffer* fb = m_free_fbs.back();
+	m_free_fbs.pop_back();
+
+	QImage image(fb->map(0), fb->width(), fb->height(), fb->stride(0), QImage::Format::Format_ARGB32);
+
+	m_screen->draw(image);
+
+	if (m_queued_fb == nullptr) {
+		AtomicReq req(m_crtc->card());
+		req.add(m_primary, { { "FB_ID", fb->id() } });
+		int r = req.commit((PageFlipHandlerBase*)this);
+		ASSERT(r == 0);
+
+		m_queued_fb = fb;
+	} else {
+		m_ready_fbs.push_back(fb);
+	}
+
+	m_pending_draw = false;
 }
 
 void QKmsDisplay::handle_page_flip(uint32_t frame, double time)
@@ -192,7 +171,9 @@ void QKmsDisplay::handle_page_flip(uint32_t frame, double time)
 	auto fb = m_ready_fbs.front();
 	m_ready_fbs.erase(m_ready_fbs.begin());
 
-	int r = m_crtc->page_flip(*fb, (PageFlipHandlerBase*)this);
+	AtomicReq req(m_crtc->card());
+	req.add(m_primary, { { "FB_ID", fb->id() } });
+	int r = req.commit((PageFlipHandlerBase*)this);
 	ASSERT(r == 0);
 
 	m_queued_fb = fb;

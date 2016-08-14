@@ -13,7 +13,7 @@ struct QKmsDisplay : public kms::PageFlipHandlerBase
 {
 	kms::Connector* m_conn;
 	kms::Crtc* m_crtc;
-	kms::Plane* m_plane = nullptr;
+	kms::Plane* m_primary;
 
 	QBareScreenInterface* m_screen;
 
@@ -26,10 +26,8 @@ struct QKmsDisplay : public kms::PageFlipHandlerBase
 
 	void flush();
 
-
 	// PageFlipHandlerBase
 	virtual void handle_page_flip(uint32_t frame, double time);
-
 };
 
 class QBareClient : public QObject, public QBareClientInterface
