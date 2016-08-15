@@ -9,6 +9,7 @@
 #include <kms++/kms++.h>
 
 #include "qbareinterface.h"
+#include "kmsmanager.h"
 
 struct QKmsDisplay : public kms::PageFlipHandlerBase
 {
@@ -36,7 +37,7 @@ class QBareClient : public QObject, public QBareClientInterface
 {
 	Q_OBJECT
 public:
-	QBareClient(QApplication& a);
+	QBareClient(QApplication& a, KmsManager* mgr);
 
 private:
 	// QBareClientInterface

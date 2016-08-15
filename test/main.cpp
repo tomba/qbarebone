@@ -8,9 +8,13 @@
 #include "qbareclient.h"
 #include "trianglewindow.h"
 #include "rasterwindow.h"
+#include "kmsmanager.h"
+#include <kms++/kms++.h>
 
 QWidget* create_moveblocks();
 void dump_screens(QGuiApplication& a);
+
+using namespace kms;
 
 int main(int argc, char *argv[])
 {
@@ -23,10 +27,16 @@ int main(int argc, char *argv[])
 
 	QApplication app(argc, argv);
 
-	QBareClient* bb = nullptr;
+	if (app.platformName() != "barebone") {
+		printf("This app requires QBareBone platform\n");
+		return -1;
+	}
 
-	if (app.platformName() == "barebone")
-		bb = new QBareClient(app);
+	Card card;
+
+	KmsManager* mgr = new KmsManager(card)
+
+	QBareClient* bb = new QBareClient(app, mgr);
 
 	//dump_screens(app);
 
@@ -72,8 +82,7 @@ int main(int argc, char *argv[])
 	printf("Enter mainloop\n");
 	app.exec();
 
-	if (bb)
-		delete bb;
+	delete bb;
 
 	return 0;
 }

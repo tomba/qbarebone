@@ -25,59 +25,7 @@ using namespace kms;
 
 static const bool use_libinput = true;
 
-
-
-//
-// KMS
-//
-
-static void setup_kms_display(QKmsDisplay* display, const char* name, ResourceManager& resman)
-{
-	PixelFormat format = PixelFormat::XRGB8888;
-
-	Card& card = resman.card();
-
-	Connector* conn = resman.reserve_connector(name);
-	ASSERT(conn);
-
-	Crtc* crtc = resman.reserve_crtc(conn);
-	ASSERT(crtc);
-
-	Plane* primary = resman.reserve_primary_plane(crtc, format);
-
-	display->m_conn = conn;
-	display->m_crtc = crtc;
-	display->m_primary = primary;
-
-	const unsigned num_fbs = 2;
-
-	Videomode mode = conn->get_default_mode();
-	uint32_t w = mode.hdisplay;
-	uint32_t h = mode.vdisplay;
-
-	// Allocate buffers
-	for (unsigned i = 0; i < num_fbs; ++i) {
-		DumbFramebuffer* fb = new DumbFramebuffer(card, w, h, format);
-		draw_test_pattern(*fb);
-		display->m_free_fbs.enqueue(fb);
-	}
-
-	// Setup initial display
-
-	DumbFramebuffer* fb = display->m_free_fbs.dequeue();
-	display->m_display_fb = fb;
-
-	AtomicReq req(card);
-
-	unique_ptr<Blob> mode_blob = mode.to_blob(card);
-
-	req.add_display(conn, crtc, mode_blob.get(), primary, fb);
-
-	int r = req.commit_sync(true);
-	ASSERT(r == 0);
-}
-
-QBareClient::QBareClient(QApplication& a)
+QBareClient::QBareClient(QApplication& a, KmsManager* mgr)
 {
 	printf("QBareClient()\n");
 
@@ -92,15 +40,10 @@ QBareClient::QBareClient(QApplication& a)
 
 	//new QFbVtHandler(this);
 
-	m_card = new Card();
-
-	ResourceManager resman(*m_card);
-
-	setup_kms_display(&m_lcd, "Unknown", resman);
-	setup_kms_display(&m_hdmi, "HDMI", resman);
+	KmsDisplay& lcd = mgr->m_displays[0];
 
 	m_lcd.m_screen = bare->add_screen(QSize(m_lcd.m_display_fb->width(), m_lcd.m_display_fb->height()), "LCD");
-	m_hdmi.m_screen = bare->add_screen(QSize(m_hdmi.m_display_fb->width(), m_hdmi.m_display_fb->height()), "HDMI");
+	//m_hdmi.m_screen = bare->add_screen(QSize(m_hdmi.m_display_fb->width(), m_hdmi.m_display_fb->height()), "HDMI");
 
 	if (use_libinput) {
 		new QLibInputHandler(QLatin1String("libinput"), QString());
