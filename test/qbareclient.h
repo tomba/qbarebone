@@ -3,9 +3,10 @@
 #include <QObject>
 #include <QSocketNotifier>
 #include <QApplication>
+#include <QQueue>
+#include <QList>
 
 #include <kms++/kms++.h>
-#include <vector>
 
 #include "qbareinterface.h"
 
@@ -17,8 +18,8 @@ struct QKmsDisplay : public kms::PageFlipHandlerBase
 
 	QBareScreenInterface* m_screen;
 
-	std::vector<kms::DumbFramebuffer*> m_free_fbs;
-	std::vector<kms::DumbFramebuffer*> m_ready_fbs;
+	QQueue<kms::DumbFramebuffer*> m_free_fbs;
+	QQueue<kms::DumbFramebuffer*> m_ready_fbs;
 	kms::DumbFramebuffer* m_queued_fb = 0;
 	kms::DumbFramebuffer* m_display_fb = 0;
 
@@ -29,6 +30,7 @@ struct QKmsDisplay : public kms::PageFlipHandlerBase
 	// PageFlipHandlerBase
 	virtual void handle_page_flip(uint32_t frame, double time);
 };
+
 
 class QBareClient : public QObject, public QBareClientInterface
 {

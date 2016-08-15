@@ -19,12 +19,17 @@
 #include <cstdio>
 #include <kms++/kms++.h>
 #include <kms++util/kms++util.h>
-#include <memory>
 
 using namespace std;
 using namespace kms;
 
 static const bool use_libinput = true;
+
+
+
+//
+// KMS
+//
 
 static void setup_kms_display(QKmsDisplay* display, const char* name, ResourceManager& resman)
 {
@@ -54,14 +59,12 @@ static void setup_kms_display(QKmsDisplay* display, const char* name, ResourceMa
 	for (unsigned i = 0; i < num_fbs; ++i) {
 		DumbFramebuffer* fb = new DumbFramebuffer(card, w, h, format);
 		draw_test_pattern(*fb);
-		display->m_free_fbs.push_back(fb);
+		display->m_free_fbs.enqueue(fb);
 	}
 
 	// Setup initial display
 
-	DumbFramebuffer* fb = display->m_free_fbs.back();
-	display->m_free_fbs.pop_back();
-
+	DumbFramebuffer* fb = display->m_free_fbs.dequeue();
 	display->m_display_fb = fb;
 
 	AtomicReq req(card);
@@ -132,8 +135,7 @@ void QKmsDisplay::flush()
 		return;
 	}
 
-	DumbFramebuffer* fb = m_free_fbs.back();
-	m_free_fbs.pop_back();
+	DumbFramebuffer* fb = m_free_fbs.dequeue();
 
 	QImage image(fb->map(0), fb->width(), fb->height(), fb->stride(0), QImage::Format::Format_ARGB32);
 
@@ -147,7 +149,7 @@ void QKmsDisplay::flush()
 
 		m_queued_fb = fb;
 	} else {
-		m_ready_fbs.push_back(fb);
+		m_ready_fbs.enqueue(fb);
 	}
 
 	m_pending_draw = false;
@@ -158,7 +160,7 @@ void QKmsDisplay::handle_page_flip(uint32_t frame, double time)
 	//printf("page flip, ready: %lu\n", m_ready_fbs.size());
 
 	if (m_display_fb)
-		m_free_fbs.push_back(m_display_fb);
+		m_free_fbs.enqueue(m_display_fb);
 	m_display_fb = m_queued_fb;
 	m_queued_fb = nullptr;
 
@@ -168,8 +170,7 @@ void QKmsDisplay::handle_page_flip(uint32_t frame, double time)
 	if (m_ready_fbs.size() == 0)
 		return;
 
-	auto fb = m_ready_fbs.front();
-	m_ready_fbs.erase(m_ready_fbs.begin());
+	auto fb = m_ready_fbs.dequeue();
 
 	AtomicReq req(m_crtc->card());
 	req.add(m_primary, { { "FB_ID", fb->id() } });

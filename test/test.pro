@@ -29,12 +29,16 @@ SOURCES += main.cpp\
     openglwindow.cpp \
     trianglewindow.cpp \
     rasterwindow.cpp \
-    moveblocks.cpp
+    moveblocks.cpp \
+    camerastreamer.cpp \
+    kmsmanager.cpp
 
 HEADERS  += mainwindow.h \
     qbareclient.h \
     openglwindow.h \
     trianglewindow.h \
-    rasterwindow.h
+    rasterwindow.h \
+    camerastreamer.h \
+    kmsmanager.h
 
 FORMS    += mainwindow.ui
